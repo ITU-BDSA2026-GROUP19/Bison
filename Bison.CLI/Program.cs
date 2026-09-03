@@ -1,4 +1,9 @@
 ﻿// if i run it with read
+using System;
+using CsvHelper;
+using System.IO;
+using System.Globalization;
+
 if (args[0] == "read")
 {
    read();
