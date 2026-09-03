@@ -57,4 +57,5 @@ static void observe(string observation)
 
     // Append a record containing the new cheep to the csv file
     csvWriter.WriteRecord<Cheep>(cheep);
+    csvWriter.NextRecord();
 }
