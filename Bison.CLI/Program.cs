@@ -1,9 +1,12 @@
-﻿// if i run it with read
+﻿
 using System;
 using CsvHelper;
 using System.IO;
 using System.Globalization;
+using System.ComponentModel.Design;
+using Bison.Cheep;
 
+// if i run it with read
 if (args[0] == "read")
 {
    read();
@@ -19,27 +22,25 @@ static void read()
     // a reader that can read from the bison observe file
     using StreamReader reader = new StreamReader("bison_observe_cli_db.csv");
     
-    // making a variable that can either be a string or null
-    string? line;
+    // a CsvReader being made
+    using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-    // read the first line without printing to avoid printing the column names
-    reader.ReadLine();
 
-    // while there is stuff to print, do it
-    while((line = reader.ReadLine()) != null)
+    // using a ClassMap to map "Observation" => "Message"
+    csvReader.Context.RegisterClassMap<CheepMap>();
+
+    // for each loop going through every line, and making them of type Cheep
+     foreach (Cheep record in csvReader.GetRecords<Cheep>())
     {
-        // put each column value in an array called words
-        string[] words = line.Split(",");
-
-        // get the unix time in a long value
-        long unixTime = Convert.ToInt64(words[2]);
-
-        // get a normal date time
+        // Timestamp from the CSV file in unix time
+        long unixTime = record.Timestamp;
+        
+        // Unix time converted to normal time
         DateTimeOffset date = DateTimeOffset.FromUnixTimeSeconds(unixTime);
-
-        // print the author, the date and time formatted as MM/dd/yy HH:mm:ss and then the text
-        Console.WriteLine($"{words[0]} @ {date:MM'/'dd'/'yy HH':'mm':'ss}: {words[1]}");
-    }  
+        
+        // Print the way specified in week 1 project part
+        Console.WriteLine($"{record.Author} @ {date:MM'/'dd'/'yy HH':'mm':'ss}: {record.Message}");
+    }
 }
 
 static void observe(string observation)
