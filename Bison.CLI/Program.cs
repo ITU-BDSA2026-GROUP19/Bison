@@ -45,9 +45,16 @@ static void read()
 
 static void observe(string observation)
 {
-    // make a writer that writes whatever i want in the end of the bison observe file
-    using StreamWriter writer = File.AppendText("bison_observe_cli_db.csv");
+    
+    // Make a Cheep object that matches the Command-line input
+    Cheep cheep = new Cheep(Environment.UserName, observation, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+   
+    // Making a StreamWriter
+   using StreamWriter writer = File.AppendText("bison_observe_cli_db.csv");
 
-    // write a line containing the currently logged in users username, the text you run the program with and the current time in unix
-    writer.WriteLine(Environment.UserName + ",\"" + observation + "\"," + DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+    // Making a CsvWriter
+   using CsvWriter csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+    // Append a record containing the new cheep to the csv file
+    csvWriter.WriteRecord<Cheep>(cheep);
 }
