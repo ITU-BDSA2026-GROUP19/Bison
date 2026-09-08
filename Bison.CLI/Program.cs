@@ -29,18 +29,8 @@ static void read()
     // using a ClassMap to map "Observation" => "Message"
     csvReader.Context.RegisterClassMap<CheepMap>();
 
-    // for each loop going through every line, and making them of type Cheep
-     foreach (Cheep record in csvReader.GetRecords<Cheep>())
-    {
-        // Timestamp from the CSV file in unix time
-        long unixTime = record.Timestamp;
-        
-        // Unix time converted to normal time
-        DateTimeOffset date = DateTimeOffset.FromUnixTimeSeconds(unixTime);
-        
-        // Print the way specified in week 1 project part
-        Console.WriteLine($"{record.Author} @ {date:MM'/'dd'/'yy HH':'mm':'ss}: {record.Message}");
-    }
+    //PrintCheeps is replaced and all logic of printing is in the userinterface
+    UserInterface.PrintCheeps(csvReader.GetRecords<Cheep>());
 }
 
 static void observe(string observation)
