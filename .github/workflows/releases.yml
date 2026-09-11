@@ -4,6 +4,9 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,7 +60,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             linux-x64.zip
