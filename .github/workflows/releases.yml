@@ -1,0 +1,62 @@
+name: .NET Release
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+      - name: Test
+        run: dotnet test --no-build --verbosity normal --configuration Release
+    
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+
+      - name: Publish linux-x64
+        run: dotnet publish Bison.CLI/Bison.CLI.csproj -r linux-x64 -p:PublishSingleFile=true --self-contained false
+      - name: zip linux-x64
+        run: zip -r linux-x64.zip Bison.CLI/bin/Release/net8.0/linux-x64/publish/
+      - name: Publish win-x64
+        run: dotnet publish Bison.CLI/Bison.CLI.csproj -r win-x64 -p:PublishSingleFile=true --self-contained false
+      - name: zip win-x64
+        run: zip -r win-x64.zip Bison.CLI/bin/Release/net8.0/win-x64/publish/
+      - name: Publish macos-x64
+        run: dotnet publish Bison.CLI/Bison.CLI.csproj -r osx-x64 -p:PublishSingleFile=true --self-contained false
+      - name: zip macos-x64
+        run: zip -r macos-x64.zip Bison.CLI/bin/Release/net8.0/osx-x64/publish/
+      - name: Publish macos-arm64
+        run: dotnet publish Bison.CLI/Bison.CLI.csproj -r osx-arm64 -p:PublishSingleFile=true --self-contained false
+      - name: zip macos-arm64
+        run: zip -r macos-arm64.zip Bison.CLI/bin/Release/net8.0/osx-arm64/publish/
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            linux-x64.zip
+            win-x64.zip
+            macos-x64.zip
+            macos-arm64.zip
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
