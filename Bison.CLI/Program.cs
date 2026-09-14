@@ -1,41 +1,30 @@
-using CsvHelper;
-using System.Globalization;
+using System.CommandLine;
 using Bison.Cheep;
 using SimpleDB;
 
 CSVDatabase<Cheep> database = new CSVDatabase<Cheep>("bison_observe_cli_db.csv");
 
-// if i run it with read
-if (args[0] == "read")
+// --- "read" command ---
+var readCommand = new Command("read", "Read all cheeps");
+readCommand.SetAction((_) =>
 {
-   read();
-}
-// if i run the program with observe
-else if (args[0] == "observe")
-{   
-    observe(args[1]);
-}
+    UserInterface.PrintCheeps(database.Read());
+});
 
-void read()
+// --- "observe" command ---
+var messageArg = new Argument<string>("message", "The observation message");
+var observeCommand = new Command("observe", "Store a new observation");
+observeCommand.Arguments.Add(messageArg);
+observeCommand.SetAction((result) =>
 {
-    // for each loop going through every line, and making them of type Cheep
-     foreach (Cheep record in database.Read())
-    {
-        // Timestamp from the CSV file in unix time
-        long unixTime = record.Timestamp;
-        
-        // Unix time converted to normal time
-        DateTimeOffset date = DateTimeOffset.FromUnixTimeSeconds(unixTime);
-        
-        // Print the way specified in week 1 project part
-        Console.WriteLine($"{record.Author} @ {date:MM'/'dd'/'yy HH':'mm':'ss}: {record.Message}");
-    }
-}
-
-void observe(string observation)
-{
-    
-    // Make a Cheep object that matches the Command-line input
-    Cheep cheep = new Cheep(Environment.UserName, observation, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+    string message = result.GetValue(messageArg)!;
+    Cheep cheep = new Cheep(Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
     database.Store(cheep);
-}
+});
+
+// --- root command ---
+var rootCommand = new RootCommand("Bison CLI - observe and read cheeps");
+rootCommand.Subcommands.Add(readCommand);
+rootCommand.Subcommands.Add(observeCommand);
+
+return await rootCommand.InvokeAsync(args);
