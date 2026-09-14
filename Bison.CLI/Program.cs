@@ -27,4 +27,4 @@ var rootCommand = new RootCommand("Bison CLI - observe and read cheeps");
 rootCommand.Subcommands.Add(readCommand);
 rootCommand.Subcommands.Add(observeCommand);
 
-return rootCommand.Invoke(args);
+return rootCommand.Parse(args).Invoke();
