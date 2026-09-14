@@ -12,7 +12,7 @@ readCommand.SetAction((_) =>
 });
 
 // --- "observe" command ---
-var messageArg = new Argument<string>("message", "The observation message");
+var messageArg = new Argument<string>("message") { Description = "The observation message" };
 var observeCommand = new Command("observe", "Store a new observation");
 observeCommand.Arguments.Add(messageArg);
 observeCommand.SetAction((result) =>
@@ -27,4 +27,4 @@ var rootCommand = new RootCommand("Bison CLI - observe and read cheeps");
 rootCommand.Subcommands.Add(readCommand);
 rootCommand.Subcommands.Add(observeCommand);
 
-return await rootCommand.InvokeAsync(args);
+return rootCommand.Invoke(args);
