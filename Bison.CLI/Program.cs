@@ -2,7 +2,7 @@ using System.CommandLine;
 using Bison.Cheep;
 using SimpleDB;
 
-CSVDatabase<Cheep> database = new CSVDatabase<Cheep>("bison_observe_cli_db.csv");
+CSVDatabase<Cheep> database = CSVDatabase<Cheep>.GetInstance("bison_observe_cli_db.csv");
 
 // --- "read" command ---
 var readCommand = new Command("read", "Read all cheeps");
