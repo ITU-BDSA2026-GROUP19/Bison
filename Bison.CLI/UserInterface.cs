@@ -23,6 +23,22 @@ public static class UserInterface
         }
     }
 
+    public static void PrintObservations(IEnumerable<Observation> observations)
+    {
+        foreach (Observation observation in observations)
+        {
+            DateTimeOffset date = DateTimeOffset.FromUnixTimeSeconds(observation.Timestamp);
+            Console.WriteLine($"{observation.Id}: {observation.Author} @ " + $"{date:MM'/'dd'/'yy HH':'mm':'ss}: " + $"{observation.Message}");
+        }
+    }
 
+    public static void PrintComments(IEnumerable<Comment> comments)
+    {
+        foreach (Comment comment in comments)
+        {
+            DateTimeOffset date = DateTimeOffset.FromUnixTimeSeconds(comment.Timestamp);
+            Console.WriteLine($"{comment.Author} @ " + $"{date:MM'/'dd'/'yy HH':'mm':'ss}: " + $"{comment.Message}");
+        }
+    }
 }
 
