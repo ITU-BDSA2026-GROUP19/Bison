@@ -10,7 +10,7 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
     private readonly string filePath;
 
 // Constructor for the CSVDatabase class that takes a file path as a parameter
-    public CSVDatabase(String filePath)
+    private CSVDatabase(String filePath)
     {
         this.filePath = filePath;
         if (File.Exists(filePath))
@@ -18,7 +18,21 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
             using StreamReader reader = new StreamReader(filePath);
             using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
         }
+    } 
+
+// Singleton instance of the CSVDatabase class
+    private static CSVDatabase<T>? instance;
+
+    // Checks if singleton instance exists, if not creates a new instance and returns it
+    public static CSVDatabase<T> GetInstance(string filePath)
+    {
+        if (instance == null)
+        {
+            instance = new CSVDatabase<T>(filePath);
+        }
+        return instance;
     }
+
 
     // Implementation of the Read method from the IDatabaseRepository interface
 	public IEnumerable<T> Read(int? limit = null)
