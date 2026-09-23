@@ -8,27 +8,29 @@ namespace SimpleDB;
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
     private readonly string filePath;
+    private readonly ClassMap<T>? map;
 
 // Constructor for the CSVDatabase class that takes a file path as a parameter
-    private CSVDatabase(String filePath)
+    private CSVDatabase(String filePath, ClassMap<T>? map = null)
     {
         this.filePath = filePath;
-        if (File.Exists(filePath))
+        this.map = map;
+        /*if (File.Exists(filePath))
         {
             using StreamReader reader = new StreamReader(filePath);
             using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
-        }
+        }*/
     } 
 
 // Singleton instance of the CSVDatabase class
     private static CSVDatabase<T>? instance;
 
     // Checks if singleton instance exists, if not creates a new instance and returns it
-    public static CSVDatabase<T> GetInstance(string filePath)
+    public static CSVDatabase<T> GetInstance(string filePath, ClassMap<T>? map = null)
     {
         if (instance == null)
         {
-            instance = new CSVDatabase<T>(filePath);
+            instance = new CSVDatabase<T>(filePath, map);
         }
         return instance;
     }
@@ -44,6 +46,12 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         // Makes a StreamReader and a CsvReader to read the CSV file
         using StreamReader reader = new StreamReader(filePath);
         using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+        if (map != null)
+        {
+            csvReader.Context.RegisterClassMap(map);
+        }
+
         var records = csvReader.GetRecords<T>();
 
         if (limit.HasValue)
@@ -64,6 +72,11 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         // Makes a StreamWriter and a CsvWriter to write to the CSV file
         using StreamWriter writer = new StreamWriter(filePath, append: true);
         using CsvWriter csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+        if (map != null)
+        {
+            csvWriter.Context.RegisterClassMap(map);
+        }
 
         if (writeHeader)
         {
