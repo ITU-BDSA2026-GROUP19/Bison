@@ -17,14 +17,14 @@ readCommand.SetAction((_) =>
 
 // --- "observe" command ---
 var observeMessageArg = new Argument<string>("message") { Description = "The observation message" };
-var locationArg = new Argument<string>("location") { Description = "The location of the observation" };
+var observationLocationArg = new Argument<string>("location") { Description = "The location of the observation" };
 var observeCommand = new Command("observe", "Store a new observation");
 observeCommand.Arguments.Add(observeMessageArg);
-observeCommand.Arguments.Add(locationArg);
+observeCommand.Arguments.Add(observationLocationArg);
 observeCommand.SetAction((result) =>
 {
     string message = result.GetValue(observeMessageArg)!;
-    string location = result.GetValue(locationArg)!;
+    string location = result.GetValue(observationLocationArg)!;
     int nextId = observationsDatabase.Read().Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
     Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), location);
     observationsDatabase.Store(observation);
@@ -64,11 +64,24 @@ discussionCommand.SetAction((result) =>
     UserInterface.PrintComments(comments);
 });
 
+
+// --- "location" command ---
+var locationArg = new Argument<string>("location") { Description = "The location of the observations" };
+var locationCommand = new Command("location", "Read observations by location");
+locationCommand.Arguments.Add(locationArg);
+locationCommand.SetAction((result) =>
+{
+    string location = result.GetValue(locationArg)!;
+    IEnumerable<Observation> observations = observationsDatabase.Read().Where(observation => observation.Location == location);
+    UserInterface.PrintObservations(observations);
+});
+
 // --- root command ---
 var rootCommand = new RootCommand("Bison CLI - observe and read cheeps");
 rootCommand.Subcommands.Add(readCommand);
 rootCommand.Subcommands.Add(observeCommand);
 rootCommand.Subcommands.Add(commentCommand);
 rootCommand.Subcommands.Add(discussionCommand);
+rootCommand.Subcommands.Add(locationCommand);
 
 return rootCommand.Parse(args).Invoke();
