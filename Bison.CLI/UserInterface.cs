@@ -28,7 +28,7 @@ public static class UserInterface
         foreach (Observation observation in observations)
         {
             DateTimeOffset date = DateTimeOffset.FromUnixTimeSeconds(observation.Timestamp);
-            Console.WriteLine($"{observation.Id}: {observation.Author} @ " + $"{date:MM'/'dd'/'yy HH':'mm':'ss}: " + $"{observation.Message}");
+            Console.WriteLine($"{observation.Id}: {observation.Author} @ " + $"{date:MM'/'dd'/'yy HH':'mm':'ss}: " + $"{observation.Message}: " + $"{observation.Location}");
         }
     }
 

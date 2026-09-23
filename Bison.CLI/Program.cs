@@ -17,13 +17,16 @@ readCommand.SetAction((_) =>
 
 // --- "observe" command ---
 var observeMessageArg = new Argument<string>("message") { Description = "The observation message" };
+var locationArg = new Argument<string>("location") { Description = "The location of the observation" };
 var observeCommand = new Command("observe", "Store a new observation");
 observeCommand.Arguments.Add(observeMessageArg);
+observeCommand.Arguments.Add(locationArg);
 observeCommand.SetAction((result) =>
 {
     string message = result.GetValue(observeMessageArg)!;
+    string location = result.GetValue(locationArg)!;
     int nextId = observationsDatabase.Read().Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
-    Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+    Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), location);
     observationsDatabase.Store(observation);
 });
 
