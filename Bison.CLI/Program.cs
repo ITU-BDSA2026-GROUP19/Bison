@@ -4,7 +4,7 @@ using SimpleDB;
 
 //CSVDatabase<Cheep> database = CSVDatabase<Cheep>.GetInstance("bison_observe_cli_db.csv");
 
-CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("bison_observations.csv");
+CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("bison_observations.csv", new ObservationMap());
 
 CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("bison_comments.csv");
 
