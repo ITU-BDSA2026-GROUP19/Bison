@@ -12,7 +12,6 @@ var app = builder.Build();
 
 // Read from the observations CSV
 app.MapGet("/observations", () => observationsDatabase.Read());
-//app.MapGet("/observations", () => new Observation("Peter", "I saw the heron again!", 1684229348));
 
 // get comments with a certain id
 app.MapGet("/comments/{id}", (int id) => {
@@ -26,6 +25,3 @@ app.MapPost("/observation", (Observation observation) => observationsDatabase.St
 app.MapPost("/comment", (Comment comment) => commentsDatabase.Store(comment));
 
 app.Run();
-
-public record Comment(int ObservationId, string Author, string Message, long Timestamp) : Cheep(Author, Message, Timestamp);
-public record Cheep(string Author, string Message, long Timestamp);
