@@ -17,11 +17,11 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
-        run: dotnet restore Bison.CLI/Bison.CLI.csproj
+        run: dotnet restore src/Bison.CLI/Bison.CLI.csproj
       - name: Build
-        run: dotnet build Bison.CLI/Bison.CLI.csproj --no-restore --configuration Release
+        run: dotnet build src/Bison.CLI/Bison.CLI.csproj --no-restore --configuration Release
       - name: Test
-        run: dotnet test Bison.CLI/Bison.CLI.csproj --no-build --verbosity normal --configuration Release
+        run: dotnet test src/Bison.CLI/Bison.CLI.csproj --no-build --verbosity normal --configuration Release
     
   release:
     needs: build
@@ -35,25 +35,25 @@ jobs:
 
 
       - name: Publish linux-x64
-        run: dotnet publish Bison.CLI/Bison.CLI.csproj -c Release -r linux-x64 -p:PublishSingleFile=true --self-contained false -o publish/linux-x64
+        run: dotnet publish src/Bison.CLI/Bison.CLI.csproj -c Release -r linux-x64 -p:PublishSingleFile=true --self-contained false -o publish/linux-x64
 
       - name: Zip linux-x64
         run: zip -r linux-x64.zip publish/linux-x64/
       
       - name: Publish win-x64
-        run: dotnet publish Bison.CLI/Bison.CLI.csproj -c Release -r win-x64 -p:PublishSingleFile=true --self-contained false -o publish/win-x64
+        run: dotnet publish src/Bison.CLI/Bison.CLI.csproj -c Release -r win-x64 -p:PublishSingleFile=true --self-contained false -o publish/win-x64
 
       - name: Zip win-x64
         run: zip -r win-x64.zip publish/win-x64/
 
       - name: Publish macos-x64
-        run: dotnet publish Bison.CLI/Bison.CLI.csproj -c Release -r osx-x64 -p:PublishSingleFile=true --self-contained false -o publish/macos-x64
+        run: dotnet publish src/Bison.CLI/Bison.CLI.csproj -c Release -r osx-x64 -p:PublishSingleFile=true --self-contained false -o publish/macos-x64
 
       - name: Zip macos-x64
         run: zip -r macos-x64.zip publish/macos-x64/
 
       - name: Publish macos-arm64
-        run: dotnet publish Bison.CLI/Bison.CLI.csproj -c Release -r osx-arm64 -p:PublishSingleFile=true --self-contained false -o publish/macos-arm64
+        run: dotnet publish src/Bison.CLI/Bison.CLI.csproj -c Release -r osx-arm64 -p:PublishSingleFile=true --self-contained false -o publish/macos-arm64
 
       - name: Zip macos-arm64
         run: zip -r macos-arm64.zip publish/macos-arm64/
