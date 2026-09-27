@@ -1,5 +1,6 @@
 using System.CommandLine;
 using Bison.Cheep;
+using System.Net.Http.Json;
 using SimpleDB;
 
 //CSVDatabase<Cheep> database = CSVDatabase<Cheep>.GetInstance("../../data/bison_observe_cli_db.csv");
@@ -8,11 +9,19 @@ CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInst
 
 CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("../../data/bison_comments.csv");
 
+HttpClient client = new HttpClient
+{
+    BaseAddress = new Uri("http://localhost:5273")
+};
+
 // --- "read" command ---
 var readCommand = new Command("read", "Read all observations");
-readCommand.SetAction((_) =>
+readCommand.SetAction(async (_) =>
 {
-    UserInterface.PrintObservations(observationsDatabase.Read());
+    List<Observation> observations =
+    await client.GetFromJsonAsync<List<Observation>>("/observations")
+    ?? [];
+    UserInterface.PrintObservations(observations);
 });
 
 // --- "observe" command ---
