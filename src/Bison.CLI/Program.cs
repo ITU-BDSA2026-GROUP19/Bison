@@ -2,11 +2,11 @@ using System.CommandLine;
 using Bison.Cheep;
 using SimpleDB;
 
-//CSVDatabase<Cheep> database = CSVDatabase<Cheep>.GetInstance("bison_observe_cli_db.csv");
+//CSVDatabase<Cheep> database = CSVDatabase<Cheep>.GetInstance("../../data/bison_observe_cli_db.csv");
 
-CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("bison_observations.csv", new ObservationMap());
+CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("../../data/bison_observations.csv", new ObservationMap());
 
-CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("bison_comments.csv");
+CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("../../data/bison_comments.csv");
 
 // --- "read" command ---
 var readCommand = new Command("read", "Read all observations");
