@@ -2,9 +2,9 @@ using SimpleDB;
 using Bison.Cheep;
 
 // Making the databases
-CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("../Bison.CLI/bison_observations.csv", new ObservationMap());
+CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("../../data/bison_observations.csv", new ObservationMap());
 
-CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("../Bison.CLI/bison_comments.csv");
+CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("../../data/bison_comments.csv");
 
 
 var builder = WebApplication.CreateBuilder(args);
