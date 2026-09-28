@@ -1,3 +1,3 @@
 namespace Bison.Cheep;
 
-public record Proposal(int ObservationId, string Author, string TaxonId, long Timestamp) : Cheep(Author, Message, Timestamp);
+public record Proposal(int ObservationId, string Author, string TaxonId, long Timestamp);
