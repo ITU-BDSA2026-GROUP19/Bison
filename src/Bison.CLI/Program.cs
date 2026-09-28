@@ -30,13 +30,20 @@ var observationLocationArg = new Argument<string>("location") { Description = "T
 var observeCommand = new Command("observe", "Store a new observation");
 observeCommand.Arguments.Add(observeMessageArg);
 observeCommand.Arguments.Add(observationLocationArg);
-observeCommand.SetAction((result) =>
+observeCommand.SetAction(async (result) =>
 {
     string message = result.GetValue(observeMessageArg)!;
     string location = result.GetValue(observationLocationArg)!;
-    int nextId = observationsDatabase.Read().Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
+
+    List<Observation> observations =
+    await client.GetFromJsonAsync<List<Observation>>("/observations")
+    ?? [];
+
+    int nextId = observations.Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
     Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), location);
-    observationsDatabase.Store(observation);
+    await client.PostAsJsonAsync("/observation", observation);
+
+    //observationsDatabase.Store(observation);
 });
 
 // --- "comment" command ---
