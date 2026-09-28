@@ -1,0 +1,47 @@
+dwc:taxonID,dwc:parentNameUsageID,dwc:acceptedNameUsageID,dwc:taxonomicStatus,dwc:taxonRank,dwc:scientificName,dwc:scientificNameAuthorship,dcterms:language,dwc:vernacularName,clb:merged
+MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:fe8365de-f785-ea11-aa77-501ac539d1ea,,accepted,order,Pelecaniformes,,dan,Årefodede,false
+MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,,accepted,family,Ardeidae,,dan,Hejrer,false
+MSTSNM:Arter:a15367e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,,accepted,family,Fregatidae,,dan,Fregatfugle,false
+MSTSNM:Arter:025767e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,,accepted,family,Pelecanidae,,dan,Pelikaner,false
+MSTSNM:Arter:2a5767e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,,accepted,family,Phalacrocoracidae,,dan,Skarver,false
+MSTSNM:Arter:5c5967e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,,accepted,family,Sulidae,,dan,Suler,false
+MSTSNM:Arter:af5967e4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea,,accepted,family,Threskiornithidae,,dan,Ibiser & skestorke,false
+MSTSNM:Arter:7f9ef9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Ardea,,,,
+MSTSNM:Arter:819ef9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Ardeola,,,,
+MSTSNM:Arter:dca0f9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Botaurus,,,,
+MSTSNM:Arter:74a1f9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Bubulcus,,,,
+MSTSNM:Arter:25aaf9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Egretta,,,,
+MSTSNM:Arter:eeb1f9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Ixobrychus,,,,
+MSTSNM:Arter:fab9f9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Nycticorax,,,,
+MSTSNM:Arter:0aadf9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:a15367e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Fregata,,,,
+MSTSNM:Arter:0bbdf9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:025767e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Pelecanus,,,,
+MSTSNM:Arter:701cda16-1f30-4973-b36b-af7e00fd7609,MSTSNM:Arter:2a5767e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Gulosus,"Montagu, 1813",,,
+MSTSNM:Arter:cb487af6-7074-427a-a7cb-b20900a28376,MSTSNM:Arter:2a5767e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Microcarbo,"Bonaparte, 1856",,,
+MSTSNM:Arter:c5bdf9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:2a5767e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Phalacrocorax,,,,
+MSTSNM:Arter:cb50a8dd-d411-4bc3-869b-ac2800d7e676,MSTSNM:Arter:5c5967e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Morus,Vieillot,,,
+MSTSNM:Arter:dfcd4cd2-9f34-4122-a30e-adf600a544fb,MSTSNM:Arter:5c5967e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Sula,"Brisson, 1760",,,
+MSTSNM:Arter:ef2c03c2-1064-461b-9b3e-b0b500cd20d7,MSTSNM:Arter:af5967e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Geronticus,"Wagler, 1832",,,
+MSTSNM:Arter:33bff9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:af5967e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Platalea,,,,
+MSTSNM:Arter:7dbff9f3-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:af5967e4-f785-ea11-aa77-501ac539d1ea,,accepted,genus,Plegadis,,,,
+MSTSNM:Arter:c18811f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:7f9ef9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Ardea alba,"Linnaeus, 1758",dan,Sølvhejre,false
+MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:7f9ef9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Ardea cinerea,"Linnaeus, 1758",dan,Fiskehejre,false
+MSTSNM:Arter:f69111f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:7f9ef9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Ardea ibis,"Linnaeus, 1758",dan,Kohejre,false
+MSTSNM:Arter:c38811f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:7f9ef9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Ardea purpurea,"Linnaeus, 1766",dan,Purpurhejre,false
+MSTSNM:Arter:c68811f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:819ef9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Ardeola ralloides,"(Scopoli, 1769)",dan,Tophejre,false
+MSTSNM:Arter:2c9011f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:dca0f9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Botaurus lentiginosus,"(Rackett, 1813)",dan,Amerikansk rørdrum,false
+MSTSNM:Arter:f54eddf8-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:dca0f9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Botaurus minutus,"(Linnaeus, 1766)",dan,Dværghejre,false
+MSTSNM:Arter:2d9011f4-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:dca0f9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Botaurus stellaris,"(Linnaeus, 1758)",dan,Rørdrum,false
+MSTSNM:Arter:ca4d8cf8-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:25aaf9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Egretta garzetta,"(Linnaeus, 1766)",dan,Silkehejre,false
+MSTSNM:Arter:2d66ddf8-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:fab9f9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Nycticorax nycticorax,"(Linnaeus, 1758)",dan,Nathejre,false
+MSTSNM:Arter:7b578cf8-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:0aadf9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Fregata magnificens,"Mathews, 1914",dan,Pragtfregatfugl,false
+MSTSNM:Arter:ee6dddf8-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:0bbdf9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Pelecanus crispus,"Bruch, 1832",dan,Krøltoppet pelikan,false
+MSTSNM:Arter:c4f52bf9-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:701cda16-1f30-4973-b36b-af7e00fd7609,,accepted,species,Gulosus aristotelis,"(Linnaeus, 1761)",dan,Topskarv,false
+MSTSNM:Arter:b17392a6-9d0e-486b-91ed-b18b00d742e2,MSTSNM:Arter:cb487af6-7074-427a-a7cb-b20900a28376,,accepted,species,Microcarbo pygmaeus,"(Pallas, 1773)",dan,Dværgskarv,false
+MSTSNM:Arter:c5f52bf9-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:c5bdf9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Phalacrocorax carbo,"(Linnaeus, 1758)",dan,Skarv,false
+MSTSNM:Arter:dc60ddf8-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:cb50a8dd-d411-4bc3-869b-ac2800d7e676,,accepted,species,Morus bassanus,"(Linnaeus, 1758)",dan,Sule,false
+MSTSNM:Arter:28d4148a-200d-4a20-a727-adf600a57270,MSTSNM:Arter:dfcd4cd2-9f34-4122-a30e-adf600a544fb,,accepted,species,Sula leucogaster,"(Boddaert, 1783)",dan,Brun sule,false
+MSTSNM:Arter:4b50c87f-f904-4fc0-8bb4-b0b500cd367d,MSTSNM:Arter:ef2c03c2-1064-461b-9b3e-b0b500cd20d7,,accepted,species,Geronticus eremita,"(Linnaeus, 1758)",dan,Eremitibis,false
+MSTSNM:Arter:f3fa2bf9-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:33bff9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Platalea leucorodia,"Linnaeus, 1758",dan,Skestork,false
+MSTSNM:Arter:3efc2bf9-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:7dbff9f3-f785-ea11-aa77-501ac539d1ea,,accepted,species,Plegadis falcinellus,"(Linnaeus, 1766)",dan,Sort ibis,false
+MSTSNM:Arter:c3cdcafa-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:c5f52bf9-f785-ea11-aa77-501ac539d1ea,,accepted,subspecies,Phalacrocorax carbo carbo,"(Linnaeus, 1758)",dan,Storskarv,false
+MSTSNM:Arter:c4cdcafa-f785-ea11-aa77-501ac539d1ea,MSTSNM:Arter:c5f52bf9-f785-ea11-aa77-501ac539d1ea,,accepted,subspecies,Phalacrocorax carbo sinensis,"(Staunton, 1796)",dan,Mellemskarv,false
