@@ -57,7 +57,7 @@ commentCommand.SetAction(async (result) =>
     int observationId = result.GetValue(commentObservationIdArg);
     string message = result.GetValue(commentMessageArg)!;
 
-List<Observation> observations =
+    List<Observation> observations =
     await client.GetFromJsonAsync<List<Observation>>("/observations")
     ?? [];
 
@@ -78,10 +78,15 @@ List<Observation> observations =
 var discussionObservationIdArg = new Argument<int>("observation-id") { Description = "The ID of the observation" };
 var discussionCommand = new Command("discussion", "Read comments for an observation");
 discussionCommand.Arguments.Add(discussionObservationIdArg);
-discussionCommand.SetAction((result) =>
+discussionCommand.SetAction(async (result) =>
 {
     int observationId = result.GetValue(discussionObservationIdArg);
-    IEnumerable<Comment> comments = commentsDatabase.Read().Where(comment => comment.ObservationId == observationId);
+
+    List<Comment> comments =
+    await client.GetFromJsonAsync<List<Comment>>($"/comments/{observationId}")
+    ?? [];
+
+    //IEnumerable<Comment> comments = commentsDatabase.Read().Where(comment => comment.ObservationId == observationId);
 
     UserInterface.PrintComments(comments);
 });
