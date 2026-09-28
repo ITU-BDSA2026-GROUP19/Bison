@@ -1,13 +1,7 @@
 using System.CommandLine;
 using Bison.Cheep;
 using System.Net.Http.Json;
-using SimpleDB;
 
-//CSVDatabase<Cheep> database = CSVDatabase<Cheep>.GetInstance("../../data/bison_observe_cli_db.csv");
-
-CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("../../data/bison_observations.csv", new ObservationMap());
-
-CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("../../data/bison_comments.csv");
 
 HttpClient client = new HttpClient
 {
@@ -42,8 +36,6 @@ observeCommand.SetAction(async (result) =>
     int nextId = observations.Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
     Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), location);
     await client.PostAsJsonAsync("/observation", observation);
-
-    //observationsDatabase.Store(observation);
 });
 
 // --- "comment" command ---
@@ -71,7 +63,6 @@ commentCommand.SetAction(async (result) =>
 
     Comment comment = new Comment(observationId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
     await client.PostAsJsonAsync("/comment", comment);
-    //commentsDatabase.Store(comment);
 });
 
 // --- "discussion" command ---
@@ -86,8 +77,6 @@ discussionCommand.SetAction(async (result) =>
     await client.GetFromJsonAsync<List<Comment>>($"/comments/{observationId}")
     ?? [];
 
-    //IEnumerable<Comment> comments = commentsDatabase.Read().Where(comment => comment.ObservationId == observationId);
-
     UserInterface.PrintComments(comments);
 });
 
@@ -96,11 +85,16 @@ discussionCommand.SetAction(async (result) =>
 var locationArg = new Argument<string>("location") { Description = "The location of the observations" };
 var locationCommand = new Command("location", "Read observations by location");
 locationCommand.Arguments.Add(locationArg);
-locationCommand.SetAction((result) =>
+locationCommand.SetAction(async (result) =>
 {
     string location = result.GetValue(locationArg)!;
-    IEnumerable<Observation> observations = observationsDatabase.Read().Where(observation => observation.Location == location);
-    UserInterface.PrintObservations(observations);
+
+    List<Observation> observations =
+    await client.GetFromJsonAsync<List<Observation>>("/observations")
+    ?? [];
+
+    IEnumerable<Observation> observationsAtLocation = observations.Where(observation => observation.Location == location);
+    UserInterface.PrintObservations(observationsAtLocation);
 });
 
 // --- root command ---
