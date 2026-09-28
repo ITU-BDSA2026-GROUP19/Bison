@@ -52,11 +52,16 @@ var commentMessageArg = new Argument<string>("message") { Description = "The com
 var commentCommand = new Command("comment", "Add a comment to an observation");
 commentCommand.Arguments.Add(commentObservationIdArg);
 commentCommand.Arguments.Add(commentMessageArg);
-commentCommand.SetAction((result) =>
+commentCommand.SetAction(async (result) =>
 {
     int observationId = result.GetValue(commentObservationIdArg);
     string message = result.GetValue(commentMessageArg)!;
-    bool observationExists = observationsDatabase.Read().Any(observation => observation.Id == observationId);
+
+List<Observation> observations =
+    await client.GetFromJsonAsync<List<Observation>>("/observations")
+    ?? [];
+
+    bool observationExists = observations.Any(observation => observation.Id == observationId);
 
     if (!observationExists)
     {
@@ -65,7 +70,8 @@ commentCommand.SetAction((result) =>
     }
 
     Comment comment = new Comment(observationId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-    commentsDatabase.Store(comment);
+    await client.PostAsJsonAsync("/comment", comment);
+    //commentsDatabase.Store(comment);
 });
 
 // --- "discussion" command ---
