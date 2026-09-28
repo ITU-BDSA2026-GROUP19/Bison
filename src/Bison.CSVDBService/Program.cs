@@ -9,6 +9,8 @@ CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInst
 
 CSVDatabase<Comment> commentsDatabase = CSVDatabase<Comment>.GetInstance("../../data/bison_comments.csv");
 
+CSVDatabase<Proposal> proposalsDatabase = CSVDatabase<Proposal>.GetInstance("../../data/bison_proposal.csv");
+
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
