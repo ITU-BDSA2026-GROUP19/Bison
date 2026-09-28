@@ -1,5 +1,8 @@
 using SimpleDB;
 using Bison.Cheep;
+using System.Reflection;
+using System.Globalization;
+using CsvHelper;
 
 // Making the databases
 CSVDatabase<Observation> observationsDatabase = CSVDatabase<Observation>.GetInstance("../../data/bison_observations.csv", new ObservationMap());
@@ -23,5 +26,29 @@ app.MapPost("/observation", (Observation observation) => observationsDatabase.St
 
 // post the comment
 app.MapPost("/comment", (Comment comment) => commentsDatabase.Store(comment));
+
+
+var assembly = Assembly.GetEntryAssembly()
+    ?? throw new InvalidOperationException("Could not find the entry assembly.");
+
+var resourceStream = assembly.GetManifestResourceStream("Bison.CSVDBService.joined.csv")
+    ?? throw new InvalidOperationException("Could not find embedded taxonomy resource.");
+
+using StreamReader reader = new StreamReader(resourceStream);
+using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+csvReader.Context.RegisterClassMap(new TaxonMap());
+
+List<Taxon> taxons = csvReader.GetRecords<Taxon>().ToList();
+Dictionary<string, Taxon> taxonsById = taxons.ToDictionary(taxon => taxon.Id);
+Dictionary<string, Taxon> taxonsByVernacularName = taxons.Where(taxon => !string.IsNullOrWhiteSpace(taxon.VernacularName)).ToDictionary(taxon => taxon.VernacularName!);
+
+foreach (Taxon taxon in taxons)
+{
+    if (taxonsById.TryGetValue(taxon.ParentId, out Taxon? parent))
+    {
+        taxon.Parent = parent;
+        parent.Children.Add(taxon);
+    }
+}
 
 app.Run();
