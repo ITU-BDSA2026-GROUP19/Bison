@@ -97,6 +97,33 @@ locationCommand.SetAction(async (result) =>
     UserInterface.PrintObservations(observationsAtLocation);
 });
 
+// --- "propose" command ---
+var proposalObservationIdArg = new Argument<int>("observation-id") { Description = "The ID of the observation to propose" };
+var taxonIdArg = new Argument<string>("taxon-id") { Description = "The taxon Id" };
+var proposeCommand = new Command("propose", "Add a proposal to an observation");
+proposeCommand.Arguments.Add(proposalObservationIdArg);
+proposeCommand.Arguments.Add(taxonIdArg);
+proposeCommand.SetAction(async (result) =>
+{
+    int observationId = result.GetValue(proposalObservationIdArg);
+    string taxonId = result.GetValue(taxonIdArg)!;
+
+    List<Observation> observations =
+    await client.GetFromJsonAsync<List<Observation>>("/observations")
+    ?? [];
+
+    bool observationExists = observations.Any(observation => observation.Id == observationId);
+
+    if (!observationExists)
+    {
+        Console.WriteLine($"Observation with ID {observationId} does not exist.");
+        return;
+    }
+
+    Proposal proposal = new Proposal(observationId, Environment.UserName, taxonId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+    await client.PostAsJsonAsync("/proposal", proposal);
+});
+
 // --- root command ---
 var rootCommand = new RootCommand("Bison CLI - observe and read cheeps");
 rootCommand.Subcommands.Add(readCommand);
@@ -104,5 +131,6 @@ rootCommand.Subcommands.Add(observeCommand);
 rootCommand.Subcommands.Add(commentCommand);
 rootCommand.Subcommands.Add(discussionCommand);
 rootCommand.Subcommands.Add(locationCommand);
+rootCommand.Subcommands.Add(proposeCommand);
 
 return rootCommand.Parse(args).Invoke();
