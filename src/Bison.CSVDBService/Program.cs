@@ -53,4 +53,21 @@ foreach (Taxon taxon in taxons)
     }
 }
 
+// get proposals with a certain observationId
+app.MapGet("/proposals/{id}", (int id) => {
+    return proposalsDatabase.Read().Where(proposal => proposal.ObservationId == id);
+});
+
+// post the proposal
+app.MapPost("/proposal", (Proposal proposal) =>
+{
+    if (taxonsById.ContainsKey(proposal.TaxonId))
+    {
+        proposalsDatabase.Store(proposal);
+    } else
+    {
+        throw new InvalidOperationException( "The given TaxonId does not exist.");
+    }
+});
+
 app.Run();
