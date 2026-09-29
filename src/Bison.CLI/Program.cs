@@ -12,10 +12,7 @@ HttpClient client = new HttpClient
 var readCommand = new Command("read", "Read all observations");
 readCommand.SetAction(async (_) =>
 {
-    List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations")
-    ?? [];
-    UserInterface.PrintObservations(observations);
+    await ReadObservations(client);
 });
 
 // --- "observe" command ---
@@ -29,13 +26,7 @@ observeCommand.SetAction(async (result) =>
     string message = result.GetValue(observeMessageArg)!;
     string location = result.GetValue(observationLocationArg)!;
 
-    List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations")
-    ?? [];
-
-    int nextId = observations.Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
-    Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), location);
-    await client.PostAsJsonAsync("/observation", observation);
+    await StoreObservation(client, message, location);
 });
 
 // --- "comment" command ---
@@ -49,20 +40,7 @@ commentCommand.SetAction(async (result) =>
     int observationId = result.GetValue(commentObservationIdArg);
     string message = result.GetValue(commentMessageArg)!;
 
-    List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations")
-    ?? [];
-
-    bool observationExists = observations.Any(observation => observation.Id == observationId);
-
-    if (!observationExists)
-    {
-        Console.WriteLine($"Observation with ID {observationId} does not exist.");
-        return;
-    }
-
-    Comment comment = new Comment(observationId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-    await client.PostAsJsonAsync("/comment", comment);
+    await AddComment(client, observationId, message);
 });
 
 // --- "discussion" command ---
@@ -74,8 +52,7 @@ discussionCommand.SetAction(async (result) =>
     int observationId = result.GetValue(discussionObservationIdArg);
 
     List<Comment> comments =
-    await client.GetFromJsonAsync<List<Comment>>($"/comments/{observationId}")
-    ?? [];
+    await client.GetFromJsonAsync<List<Comment>>($"/comments/{observationId}") ?? [];
 
     UserInterface.PrintComments(comments);
 });
@@ -90,8 +67,7 @@ locationCommand.SetAction(async (result) =>
     string location = result.GetValue(locationArg)!;
 
     List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations")
-    ?? [];
+    await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
 
     IEnumerable<Observation> observationsAtLocation = observations.Where(observation => observation.Location == location);
     UserInterface.PrintObservations(observationsAtLocation);
@@ -109,8 +85,7 @@ proposeCommand.SetAction(async (result) =>
     string taxonId = result.GetValue(taxonIdArg)!;
 
     List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations")
-    ?? [];
+    await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
 
     bool observationExists = observations.Any(observation => observation.Id == observationId);
 
@@ -123,6 +98,49 @@ proposeCommand.SetAction(async (result) =>
     Proposal proposal = new Proposal(observationId, Environment.UserName, taxonId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
     await client.PostAsJsonAsync("/proposal", proposal);
 });
+
+
+static async Task ReadObservations(HttpClient client)
+{
+    List<Observation> observations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+
+    UserInterface.PrintObservations(observations);
+}
+
+static async Task StoreObservation(HttpClient client, string message, string location)
+{
+    List<Observation> observations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+
+    int nextId = observations.Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
+
+    Observation observation = new Observation(nextId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), location);
+
+    await client.PostAsJsonAsync("/observation", observation);
+}
+
+static async Task AddComment(HttpClient client, int observationId, string message)
+{
+    List<Observation> observations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+
+    bool observationExists = ObservationExists(observations, observationId);
+
+    if (!observationExists)
+    {
+        Console.WriteLine($"Observation with ID {observationId} does not exist.");
+        return;
+    }
+
+    Comment comment = new Comment(observationId, Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+
+    await client.PostAsJsonAsync("/comment", comment);
+}
+
+static bool ObservationExists(
+    IEnumerable<Observation> observations,
+    int observationId)
+{
+    return observations.Any(observation => observation.Id == observationId);
+}
 
 // --- root command ---
 var rootCommand = new RootCommand("Bison CLI - observe and read cheeps");
