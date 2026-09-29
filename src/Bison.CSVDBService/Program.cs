@@ -53,4 +53,9 @@ foreach (Taxon taxon in taxons)
     }
 }
 
+// get proposals with a certain observationId
+app.MapGet("/proposals/{id}", (int id) => {
+    return proposalsDatabase.Read().Where(proposal => proposal.ObservationId == id);
+});
+
 app.Run();
