@@ -5,7 +5,6 @@ namespace Bison.CLI.Tests;
 public class UnitTest1
 {
    [Fact]
-    // A test to see if 
     public void PrintCheeps_ConvertsTimestampCorrectly()
     {
         var cheep = new Observation(1, "Alice", "Hello", 0, "Copenhagen");
