@@ -8,7 +8,7 @@ public class dbIntegrationTest
     CSVDatabase<TestRecord> database = CSVDatabase<TestRecord>.GetInstance("../../../../../data/test.csv");
 
     [Fact]
-    public async Task Store_Then_Read()
+    public void Store_Then_Read()
     {
         database.Store(new TestRecord("Goat", "Hello there!", 143421312312));
         IEnumerable<TestRecord> output = database.Read();
@@ -17,7 +17,7 @@ public class dbIntegrationTest
     }
 
     [Fact]
-    public async Task Read_Limit()
+    public void Read_Limit()
     {
         database.Store(new TestRecord("Goat", "Hello there!", 143421312312));
         database.Store(new TestRecord("Goat", "Hello there!", 143421312315));
