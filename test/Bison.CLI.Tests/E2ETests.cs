@@ -89,6 +89,35 @@ public class E2ETests
         }
     }
 
+
+    [Fact]
+    public async Task Location_Only_Prints_Observations_At_Location()
+    {
+        Process service = StartWebService();
+
+        try
+        {
+            await WaitForService();
+
+            Process cli = StartCli("location", "Copenhagen");
+
+
+            string output = await cli.StandardOutput.ReadToEndAsync();
+            await cli.WaitForExitAsync();
+
+
+            Assert.Contains("Copenhagen", output);
+            Assert.DoesNotContain("Odense", output);
+        }
+        finally
+        {
+            if (!service.HasExited)
+            {
+                service.Kill(true);
+            }
+        }
+    }
+
     static Process StartWebService()
     {
         string projectPath = FindProject("Bison.CSVDBService");
