@@ -118,6 +118,62 @@ public class E2ETests
         }
     }
 
+
+    [Fact]
+public async Task Propose_ValidTaxon_Adds_To_ProposalCsv()
+{
+    Process service = StartWebService();
+
+    try
+    {
+        await WaitForService();
+
+        Process cli = StartCli("propose", "3", "MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea");
+
+        await cli.WaitForExitAsync();
+
+        string filePath = "../../../../../data/bison_proposals.csv";
+        string contents = await File.ReadAllTextAsync(filePath);
+
+        Assert.Contains("MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea", contents);
+    }
+    finally
+    {
+        if (!service.HasExited)
+        {
+            service.Kill(true);
+        }
+    }
+}
+
+
+[Fact]
+public async Task Propose_InvalidTaxon_DoesNotAdd_To_ProposalCsv()
+{
+    Process service = StartWebService();
+
+    try
+    {
+        await WaitForService();
+
+        Process cli = StartCli("propose", "3", "invalidTaxonId");
+
+        await cli.WaitForExitAsync();
+
+        string filePath = "../../../../../data/bison_proposals.csv";
+        string contents = await File.ReadAllTextAsync(filePath);
+
+        Assert.DoesNotContain("invalidTaxonId", contents);
+    }
+    finally
+    {
+        if (!service.HasExited)
+        {
+            service.Kill(true);
+        }
+    }
+}
+
     static Process StartWebService()
     {
         string projectPath = FindProject("Bison.CSVDBService");

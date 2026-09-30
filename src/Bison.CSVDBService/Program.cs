@@ -36,8 +36,8 @@ var assembly = Assembly.GetEntryAssembly()
 var resourceStream = assembly.GetManifestResourceStream("Bison.CSVDBService.joined.csv")
     ?? throw new InvalidOperationException("Could not find embedded taxonomy resource.");
 
-using StreamReader reader = new StreamReader(resourceStream);
-using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+using StreamReader reader = new(resourceStream);
+using CsvReader csvReader = new(reader, CultureInfo.InvariantCulture);
 csvReader.Context.RegisterClassMap(new TaxonMap());
 
 List<Taxon> taxons = csvReader.GetRecords<Taxon>().ToList();

@@ -11,15 +11,10 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
     private readonly ClassMap<T>? map;
 
 // Constructor for the CSVDatabase class that takes a file path as a parameter
-    private CSVDatabase(String filePath, ClassMap<T>? map = null)
+    private CSVDatabase(string filePath, ClassMap<T>? map = null)
     {
         this.filePath = filePath;
         this.map = map;
-        /*if (File.Exists(filePath))
-        {
-            using StreamReader reader = new StreamReader(filePath);
-            using CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
-        }*/
     } 
 
 // Singleton instance of the CSVDatabase class
