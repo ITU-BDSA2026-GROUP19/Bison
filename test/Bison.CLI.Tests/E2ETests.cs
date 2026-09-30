@@ -8,23 +8,77 @@ public class E2ETests
     [Fact]
     public async Task Comment_NonExistingObservation_PrintsError()
     {
-        // Arrange
         Process service = StartWebService();
 
         try
         {
             await WaitForService();
 
-            // Act
             Process cli = StartCli("comment", "999999", "Hello");
 
             string output = await cli.StandardOutput.ReadToEndAsync();
             await cli.WaitForExitAsync();
 
-            // Assert
             Assert.Contains(
                 "Observation with ID 999999 does not exist.",
                 output);
+        }
+        finally
+        {
+            if (!service.HasExited)
+            {
+                service.Kill(true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Read_PrintsObservations()
+    {
+        Process service = StartWebService();
+
+        try
+        {
+            await WaitForService();
+
+            Process cli = StartCli("read");
+
+            string output = await cli.StandardOutput.ReadToEndAsync();
+            await cli.WaitForExitAsync();
+
+            Assert.Contains("edka", output);
+            Assert.Contains("Ardea cinerea at DR Byen", output);
+        }
+        finally
+        {
+            if (!service.HasExited)
+            {
+                service.Kill(true);
+            }
+        }
+    }
+
+
+    [Fact]
+    public async Task Observe_Adds_To_ObservationCsv()
+    {
+        Process service = StartWebService();
+
+        try
+        {
+            await WaitForService();
+
+            Process cli = StartCli("observe", "Penguin", "Copenhagen");
+
+
+            string filePath = "../../../../../data/bison_observations.csv";
+
+            await cli.WaitForExitAsync();
+
+            string contents = await File.ReadAllTextAsync(filePath);
+
+            Assert.Contains("Penguin", contents);
+            Assert.Contains("Copenhagen", contents);
         }
         finally
         {
@@ -55,7 +109,7 @@ public class E2ETests
         return process;
     }
 
-    static Process StartCli(string command, string argument1, string argument2)
+    static Process StartCli(string command, params string[] arguments)
     {
         string projectPath = FindProject("Bison.CLI");
 
@@ -67,8 +121,11 @@ public class E2ETests
         process.StartInfo.ArgumentList.Add(projectPath);
         process.StartInfo.ArgumentList.Add("--");
         process.StartInfo.ArgumentList.Add(command);
-        process.StartInfo.ArgumentList.Add(argument1);
-        process.StartInfo.ArgumentList.Add(argument2);
+
+        foreach (string argument in arguments)
+        {
+            process.StartInfo.ArgumentList.Add(argument);
+        }
 
         process.StartInfo.RedirectStandardOutput = true;
         process.StartInfo.RedirectStandardError = true;
@@ -97,7 +154,6 @@ public class E2ETests
             }
             catch
             {
-                // Service is not ready yet.
             }
 
             await Task.Delay(200);
