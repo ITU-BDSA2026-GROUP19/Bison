@@ -26,7 +26,6 @@ public class FuzzTests
 
             expectedObservations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
             List<int> validObservationIds = expectedObservations.Select(observation => observation.Id).ToList();
-            // fuzzing will go here
 
             Random random = new();
 
