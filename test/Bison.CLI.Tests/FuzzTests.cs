@@ -28,6 +28,8 @@ public class FuzzTests
 
             expectedObservations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
             List<int> validObservationIds = expectedObservations.Select(observation => observation.Id).ToList();
+            List<string> validTaxonIds = ["MSTSNM:Arter:3e4e67e4-f785-ea11-aa77-501ac539d1ea", 
+            "MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea", "MSTSNM:Arter:a15367e4-f785-ea11-aa77-501ac539d1ea"];
 
             expectedComments = [];
 
@@ -37,6 +39,8 @@ public class FuzzTests
 
                 expectedComments.AddRange(comments);
             }
+
+
 
             for (int i = 0; i < 100; i++)
             {
@@ -79,10 +83,41 @@ public class FuzzTests
                 }
             }
 
+            
+            expectedProposals = [];
+
+            for (int i = 0; i < 100; i++)
+                {
+                    int observationId =
+                        validObservationIds[random.Next(validObservationIds.Count)];
+
+                    string taxonId =
+                        validTaxonIds[random.Next(validTaxonIds.Count)];
+
+                    Proposal proposal = new(
+                        observationId,
+                        $"user{random.Next(1000)}",
+                        taxonId,
+                        DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                    );
+
+                    HttpResponseMessage response =
+                        await client.PostAsJsonAsync("/proposal", proposal);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        expectedProposals.Add(proposal);
+                    }
+                }
+
+
+
                 List<Observation> actualObservations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
 
                 Assert.Equal(expectedObservations, actualObservations);
 
+                
+                
                 foreach (int observationId in validObservationIds)
                 {
                     List<Comment> actualComments =
@@ -93,6 +128,19 @@ public class FuzzTests
 
                     Assert.Equal(expected, actualComments);
                 }
+
+
+                foreach (int observationId in validObservationIds)
+                {
+                    List<Proposal> actualProposals =
+                        await client.GetFromJsonAsync<List<Proposal>>($"/proposals/{observationId}") ?? [];
+
+                    List<Proposal> expected =
+                        expectedProposals.Where(proposal => proposal.ObservationId == observationId).ToList();
+
+                    Assert.Equal(expected, actualProposals);
+                }
+                
         }
         finally
         {
