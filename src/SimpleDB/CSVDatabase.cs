@@ -56,7 +56,7 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 
         if (limit.HasValue)
         {
-            return records.Take(limit.Value);
+            return records.Take(limit.Value).ToList();
         }
         else
         {
