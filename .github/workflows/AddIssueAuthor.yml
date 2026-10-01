@@ -1,0 +1,22 @@
+name: Add issue author
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  issues: write
+
+jobs:
+  add-author:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add author comment
+        run: gh issue comment "$ISSUE" --body "Author: $AUTHOR"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.html_url }}
+          AUTHOR: ${{ github.actor }}
