@@ -57,7 +57,6 @@ public class E2ETests
         }
     }
 
-
     [Fact]
     public async Task Observe_Adds_To_ObservationCsv()
     {
@@ -67,8 +66,8 @@ public class E2ETests
         {
             await TestHelpers.WaitForService();
 
-            Process cli = TestHelpers.StartCli("observe", "Penguin", "Copenhagen");
-
+            Process cli =
+                TestHelpers.StartCli("observe", "Penguin", "Copenhagen");
 
             string filePath = "../../../../../data/bison_observations.csv";
 
@@ -88,7 +87,6 @@ public class E2ETests
         }
     }
 
-
     [Fact]
     public async Task Location_Only_Prints_Observations_At_Location()
     {
@@ -100,10 +98,8 @@ public class E2ETests
 
             Process cli = TestHelpers.StartCli("location", "Copenhagen");
 
-
             string output = await cli.StandardOutput.ReadToEndAsync();
             await cli.WaitForExitAsync();
-
 
             Assert.Contains("Copenhagen", output);
             Assert.DoesNotContain("Odense", output);
@@ -117,59 +113,63 @@ public class E2ETests
         }
     }
 
+    [Fact]
+    public async Task Propose_ValidTaxon_Adds_To_ProposalCsv()
+    {
+        Process service = TestHelpers.StartWebService();
+
+        try
+        {
+            await TestHelpers.WaitForService();
+
+            Process cli = TestHelpers.StartCli(
+                "propose",
+                "3",
+                "MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea");
+
+            await cli.WaitForExitAsync();
+
+            string filePath = "../../../../../data/bison_proposals.csv";
+            string contents = await File.ReadAllTextAsync(filePath);
+
+            Assert.Contains(
+                "MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea",
+                contents);
+        }
+        finally
+        {
+            if (!service.HasExited)
+            {
+                service.Kill(true);
+            }
+        }
+    }
 
     [Fact]
-public async Task Propose_ValidTaxon_Adds_To_ProposalCsv()
-{
-    Process service = TestHelpers.StartWebService();
-
-    try
+    public async Task Propose_InvalidTaxon_DoesNotAdd_To_ProposalCsv()
     {
-        await TestHelpers.WaitForService();
+        Process service = TestHelpers.StartWebService();
 
-        Process cli = TestHelpers.StartCli("propose", "3", "MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea");
-
-        await cli.WaitForExitAsync();
-
-        string filePath = "../../../../../data/bison_proposals.csv";
-        string contents = await File.ReadAllTextAsync(filePath);
-
-        Assert.Contains("MSTSNM:Arter:c28811f4-f785-ea11-aa77-501ac539d1ea", contents);
-    }
-    finally
-    {
-        if (!service.HasExited)
+        try
         {
-            service.Kill(true);
+            await TestHelpers.WaitForService();
+
+            Process cli =
+                TestHelpers.StartCli("propose", "3", "invalidTaxonId");
+
+            await cli.WaitForExitAsync();
+
+            string filePath = "../../../../../data/bison_proposals.csv";
+            string contents = await File.ReadAllTextAsync(filePath);
+
+            Assert.DoesNotContain("invalidTaxonId", contents);
+        }
+        finally
+        {
+            if (!service.HasExited)
+            {
+                service.Kill(true);
+            }
         }
     }
-}
-
-
-[Fact]
-public async Task Propose_InvalidTaxon_DoesNotAdd_To_ProposalCsv()
-{
-    Process service = TestHelpers.StartWebService();
-
-    try
-    {
-        await TestHelpers.WaitForService();
-
-        Process cli = TestHelpers.StartCli("propose", "3", "invalidTaxonId");
-
-        await cli.WaitForExitAsync();
-
-        string filePath = "../../../../../data/bison_proposals.csv";
-        string contents = await File.ReadAllTextAsync(filePath);
-
-        Assert.DoesNotContain("invalidTaxonId", contents);
-    }
-    finally
-    {
-        if (!service.HasExited)
-        {
-            service.Kill(true);
-        }
-    }
-}
 }

@@ -2,9 +2,9 @@
 
 namespace Bison.CLI.Tests;
 
-public class UnitTest1
+public class UserInterfaceTests
 {
-   [Fact]
+    [Fact]
     public void PrintCheeps_ConvertsTimestampCorrectly()
     {
         var cheep = new Observation(1, "Alice", "Hello", 0, "Copenhagen");
@@ -18,7 +18,6 @@ public class UnitTest1
 
         Assert.Contains("Alice @ 01/01/70 00:00:00: Hello", output);
     }
-
 
     [Fact]
     public void PrintObservations_PrintsObservationCorrectly()

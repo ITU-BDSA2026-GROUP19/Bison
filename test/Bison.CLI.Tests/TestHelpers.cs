@@ -29,12 +29,13 @@ public static class TestHelpers
     {
         using var client = new HttpClient();
 
+        // The web service starts asynchronously, so wait until it responds
+        // before running tests that depend on it.
         for (int i = 0; i < 50; i++)
         {
             try
             {
-                HttpResponseMessage response =
-                    await client.GetAsync("http://localhost:5273/observations");
+                HttpResponseMessage response = await client.GetAsync("http://localhost:5273/observations");
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -44,7 +45,6 @@ public static class TestHelpers
             catch
             {
             }
-
             await Task.Delay(200);
         }
 
@@ -53,17 +53,14 @@ public static class TestHelpers
 
     public static string FindProject(string projectName)
     {
-        DirectoryInfo? directory =
-            new DirectoryInfo(AppContext.BaseDirectory);
+        DirectoryInfo? directory = new DirectoryInfo(AppContext.BaseDirectory);
 
+        // Tests run from the test project's output directory, so search
+        // upwards until the requested project is found.
         while (directory != null)
         {
             string projectPath =
-                Path.Combine(
-                    directory.FullName,
-                    "src",
-                    projectName,
-                    $"{projectName}.csproj");
+                Path.Combine(directory.FullName, "src", projectName, $"{projectName}.csproj");
 
             if (File.Exists(projectPath))
             {
@@ -75,7 +72,6 @@ public static class TestHelpers
 
         throw new Exception($"Could not find {projectName}.csproj");
     }
-
 
     public static Process StartCli(string command, params string[] arguments)
     {

@@ -34,7 +34,7 @@ public class FuzzTests
             "MSTSNM:Arter:495067e4-f785-ea11-aa77-501ac539d1ea", "MSTSNM:Arter:a15367e4-f785-ea11-aa77-501ac539d1ea"];
 
             
-            // putting comments already in the csv file into the List
+            // Start with the comments already stored in the CSV file.
             expectedComments = [];
 
             foreach (int observationId in validObservationIds)
@@ -48,7 +48,7 @@ public class FuzzTests
             expectedProposals = [];
 
             
-            // run 200 fuzztests
+            // Run 200 random operations against the service.
             for (int i = 0; i < 200; i++)
             {
                 int choice = random.Next(1, 4);
