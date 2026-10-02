@@ -3,7 +3,7 @@ using Bison.Cheep;
 using System.Net.Http.Json;
 
 
-HttpClient client = new HttpClient
+HttpClient client = new()
 {
     BaseAddress = new Uri("http://localhost:5273")
 };
@@ -66,8 +66,7 @@ locationCommand.SetAction(async (result) =>
 {
     string location = result.GetValue(locationArg)!;
 
-    List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+    List<Observation> observations = await GetObservations(client);
 
     IEnumerable<Observation> observationsAtLocation = observations.Where(observation => observation.Location == location);
     UserInterface.PrintObservations(observationsAtLocation);
@@ -84,10 +83,9 @@ proposeCommand.SetAction(async (result) =>
     int observationId = result.GetValue(proposalObservationIdArg);
     string taxonId = result.GetValue(taxonIdArg)!;
 
-    List<Observation> observations =
-    await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+    List<Observation> observations = await GetObservations(client);
 
-    bool observationExists = observations.Any(observation => observation.Id == observationId);
+    bool observationExists = ObservationExists(observations, observationId);
 
     if (!observationExists)
     {
@@ -102,14 +100,19 @@ proposeCommand.SetAction(async (result) =>
 
 static async Task ReadObservations(HttpClient client)
 {
-    List<Observation> observations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+    List<Observation> observations = await GetObservations(client);
 
     UserInterface.PrintObservations(observations);
 }
 
+static async Task<List<Observation>> GetObservations(HttpClient client)
+{
+    return await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+}
+
 static async Task StoreObservation(HttpClient client, string message, string location)
 {
-    List<Observation> observations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+    List<Observation> observations = await GetObservations(client);
 
     int nextId = observations.Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
 
@@ -120,7 +123,7 @@ static async Task StoreObservation(HttpClient client, string message, string loc
 
 static async Task AddComment(HttpClient client, int observationId, string message)
 {
-    List<Observation> observations = await client.GetFromJsonAsync<List<Observation>>("/observations") ?? [];
+    List<Observation> observations = await GetObservations(client);
 
     bool observationExists = ObservationExists(observations, observationId);
 

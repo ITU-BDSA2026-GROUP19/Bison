@@ -1,0 +1,33 @@
+﻿@page "/{author}"
+@model Bison.Razor.Pages.UserTimelineModel
+@{
+    ViewData["Title"] = "Bison";
+    Layout = "Shared/_Layout";
+    var routeName = HttpContext.GetRouteValue("author");
+}
+
+<div>
+    <h2> @routeName's Observations </h2>
+
+    @if (Model.Observations.Any())
+    {
+        <ul id="messagelist" class="observations">
+            @foreach (var ob in Model.Observations)
+            {
+                <li>
+                    <p>
+                        <strong>
+                            <a href="/@ob.Author">@ob.Author</a>
+                        </strong>
+                        @ob.Message
+                        <small>&mdash; @ob.Timestamp</small>
+                    </p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>There are no Observations so far.</em>
+    }
+</div>

@@ -1,0 +1,27 @@
+name: Add issue author
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  issues: write
+
+jobs:
+  add-author:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add author comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const author = context.payload.issue.user.login;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Author: ${author}`
+            });
