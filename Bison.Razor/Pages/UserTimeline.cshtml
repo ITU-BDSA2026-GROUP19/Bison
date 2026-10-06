@@ -31,3 +31,15 @@
         <em>There are no Observations so far.</em>
     }
 </div>
+
+@if (Model.CurrentPage > 1)
+{
+    <a href="?page=@(Model.CurrentPage - 1)">Previous</a>
+}
+
+<span>Page @Model.CurrentPage</span>
+
+@if (Model.Observations.Count == 32)
+{
+    <a href="?page=@(Model.CurrentPage + 1)">Next</a>
+}
