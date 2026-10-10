@@ -21,7 +21,8 @@ public class TestDatabase
     insertCommand.CommandText = @"
         INSERT INTO user (user_id, username, email, pw_hash) VALUES
         (1, 'Peter', 'peter@example.com', 'hashed_password_1'),
-        (2, 'Petra', 'petra@example.com', 'hashed_password_2')
+        (2, 'Petra', 'petra@example.com', 'hashed_password_2'),
+        (3, 'Paul', 'paul@example.com', 'hashed_password_3')
     ";
     insertCommand.ExecuteNonQuery();
     using var insertCommand2 = connection.CreateCommand();
