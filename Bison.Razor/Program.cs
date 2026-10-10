@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +15,9 @@ if (string.IsNullOrEmpty(dbPath))
 DBFacade dbFacade = new DBFacade(dbPath);
 builder.Services.AddSingleton(dbFacade);
 builder.Services.AddSingleton<IObservationService, ObservationService>();
+
+string connectionString = $"Data Source={dbPath}";
+builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 
 
 var app = builder.Build();
