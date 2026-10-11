@@ -69,13 +69,17 @@ namespace Bison.Razor.Migrations
 
             modelBuilder.Entity("Taxon", b =>
                 {
-                    b.Property<string>("TaxonId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TaxonId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("ParentTaxonId")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("ParentTaxonId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("VernacularName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("dwc_TaxonID")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -102,8 +106,8 @@ namespace Bison.Razor.Migrations
                 {
                     b.HasBaseType("Post");
 
-                    b.Property<string>("TaxonId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TaxonId")
+                        .HasColumnType("INTEGER");
 
                     b.HasIndex("TaxonId");
 
@@ -117,8 +121,8 @@ namespace Bison.Razor.Migrations
                     b.Property<int>("ObservationPostId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TaxonId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TaxonId")
+                        .HasColumnType("INTEGER");
 
                     b.HasIndex("ObservationPostId");
 
@@ -159,7 +163,7 @@ namespace Bison.Razor.Migrations
             modelBuilder.Entity("Comment", b =>
                 {
                     b.HasOne("Observation", "Observation")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("ObservationPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -171,7 +175,9 @@ namespace Bison.Razor.Migrations
                 {
                     b.HasOne("Taxon", "Taxon")
                         .WithMany()
-                        .HasForeignKey("TaxonId");
+                        .HasForeignKey("TaxonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Taxon");
                 });
@@ -179,14 +185,16 @@ namespace Bison.Razor.Migrations
             modelBuilder.Entity("Proposal", b =>
                 {
                     b.HasOne("Observation", "Observation")
-                        .WithMany()
+                        .WithMany("Proposals")
                         .HasForeignKey("ObservationPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Taxon", "Taxon")
                         .WithMany()
-                        .HasForeignKey("TaxonId");
+                        .HasForeignKey("TaxonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Observation");
 
@@ -201,6 +209,13 @@ namespace Bison.Razor.Migrations
             modelBuilder.Entity("Taxon", b =>
                 {
                     b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("Observation", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Proposals");
                 });
 #pragma warning restore 612, 618
         }

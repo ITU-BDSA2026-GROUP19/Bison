@@ -15,7 +15,7 @@ public class UserTimelineModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet(string author, [FromQuery] int page)
+    public async Task<ActionResult> OnGet(string author, [FromQuery] int page)
     {
         if (page < 1)
         {
@@ -23,7 +23,7 @@ public class UserTimelineModel : PageModel
         }
 
         CurrentPage = page;
-        Observations = _service.GetObservationsFromAuthor(author, page);
+        Observations = await _service.GetObservationsFromAuthor(author, page);
         return Page();
     }
 }

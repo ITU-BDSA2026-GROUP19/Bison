@@ -14,13 +14,22 @@ if (string.IsNullOrEmpty(dbPath))
 
 DBFacade dbFacade = new DBFacade(dbPath);
 builder.Services.AddSingleton(dbFacade);
-builder.Services.AddSingleton<IObservationService, ObservationService>();
+builder.Services.AddScoped<IObservationService, ObservationService>();
 
 string connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider
+        .GetRequiredService<BisonDBContext>();
+
+    DbInitializer.SeedDatabase(dbContext);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

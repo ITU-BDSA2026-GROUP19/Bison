@@ -29,9 +29,11 @@ namespace Bison.Razor.Migrations
                 name: "Taxa",
                 columns: table => new
                 {
-                    TaxonId = table.Column<string>(type: "TEXT", nullable: false),
+                    TaxonId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    dwc_TaxonID = table.Column<string>(type: "TEXT", nullable: false),
                     VernacularName = table.Column<string>(type: "TEXT", nullable: false),
-                    ParentTaxonId = table.Column<string>(type: "TEXT", nullable: true)
+                    ParentTaxonId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,9 +56,9 @@ namespace Bison.Razor.Migrations
                     AuthorId = table.Column<int>(type: "INTEGER", nullable: false),
                     Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     ObservationPostId = table.Column<int>(type: "INTEGER", nullable: true),
-                    TaxonId = table.Column<string>(type: "TEXT", nullable: true),
+                    TaxonId = table.Column<int>(type: "INTEGER", nullable: true),
                     Proposal_ObservationPostId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Proposal_TaxonId = table.Column<string>(type: "TEXT", nullable: true)
+                    Proposal_TaxonId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,12 +85,14 @@ namespace Bison.Razor.Migrations
                         name: "FK_Posts_Taxa_Proposal_TaxonId",
                         column: x => x.Proposal_TaxonId,
                         principalTable: "Taxa",
-                        principalColumn: "TaxonId");
+                        principalColumn: "TaxonId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Posts_Taxa_TaxonId",
                         column: x => x.TaxonId,
                         principalTable: "Taxa",
-                        principalColumn: "TaxonId");
+                        principalColumn: "TaxonId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

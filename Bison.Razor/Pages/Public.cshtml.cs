@@ -14,7 +14,7 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet([FromQuery] int page)
+    public async Task<IActionResult> OnGet([FromQuery] int page)
     {
         if (page < 1)
         {
@@ -22,7 +22,7 @@ public class PublicModel : PageModel
         }
 
         CurrentPage = page;
-        Observations = _service.GetObservations(page);
+        Observations = await _service.GetObservations(page);
         return Page();
     }
 }

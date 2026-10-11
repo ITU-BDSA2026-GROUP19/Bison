@@ -16,14 +16,14 @@ public class ObservationModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet(int id)
+    public async Task<ActionResult> OnGet(int id)
     {
         if (id == 0)
         {
             return Redirect("/");
         }
 
-        List<ObservationDetailsViewModel> found = _service.GetObservationById(id);
+        List<ObservationDetailsViewModel> found = await _service.GetObservationById(id);
 
         if (found.Count == 0)
         {
@@ -31,8 +31,8 @@ public class ObservationModel : PageModel
         }
 
         Observation = found[0];
-        Comments = _service.GetComments(id);
-        Proposals = _service.GetProposals(id);
+        Comments = await _service.GetComments(id);
+        Proposals = await _service.GetProposals(id);
 
         return Page();
     }
