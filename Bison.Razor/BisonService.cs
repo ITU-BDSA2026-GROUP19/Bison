@@ -17,10 +17,8 @@ public interface IObservationService
 public class ObservationService : IObservationService
 {
     private const int PageSize = 32;
-    //private readonly DBFacade _db;
     private IPostRepository _postRepository;
 
-    //public ObservationService(DBFacade db)
     public ObservationService(IPostRepository db)
     {
         _postRepository = db;
