@@ -8,7 +8,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
     <ProjectReference Include="..\Bison.CLI\Bison.CLI.csproj" />
   </ItemGroup>
 
@@ -18,6 +17,6 @@
 
 
   <ItemGroup>
-    <EmbeddedResource Include="../../data/joined.csv"/>
+    <EmbeddedResource Include="../../data/joined.csv" />
   </ItemGroup>
 </Project>
