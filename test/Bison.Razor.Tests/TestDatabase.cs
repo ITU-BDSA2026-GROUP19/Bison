@@ -1,35 +1,56 @@
-using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
-public class TestDatabase
+namespace Bison.Razor.Tests;
+
+public class TestDatabase : IDisposable
 {
     public string DbPath { get; }
 
     public TestDatabase()
-{
-    DbPath = Path.Combine(Path.GetTempPath(), $"bison-test-{Guid.NewGuid()}.db");
+    {
+        DbPath = Path.Combine(
+            Path.GetTempPath(),
+            $"bison-test-{Guid.NewGuid()}.db");
 
-    var schemaPath = Path.Combine(AppContext.BaseDirectory, "Schema.sql");
-    var schemaSql = File.ReadAllText(schemaPath);
+        var DbOptions = new DbContextOptionsBuilder<BisonDBContext>()
+        .UseSqlite($"Data Source={DbPath}").Options;
 
-    using var connection = new SqliteConnection($"Data Source={DbPath}");
-    connection.Open();
-    using var command = connection.CreateCommand();
-    command.CommandText = schemaSql;
-    command.ExecuteNonQuery();
+        using(var context = new BisonDBContext(DbOptions))
+        {
+            context.Database.Migrate();
+            context.Authors.AddRange(new Author { Name = "Peter", Email = "peter@example.com" },
+                                 new Author { Name = "Petra", Email = "petra@example.com" },
+                                 new Author { Name = "Paul", Email = "paul@example.com" });
+            context.SaveChanges();
 
-    using var insertCommand = connection.CreateCommand();
-    insertCommand.CommandText = @"
-        INSERT INTO user (user_id, username, email, pw_hash) VALUES
-        (1, 'Peter', 'peter@example.com', 'hashed_password_1'),
-        (2, 'Petra', 'petra@example.com', 'hashed_password_2'),
-        (3, 'Paul', 'paul@example.com', 'hashed_password_3')
-    ";
-    insertCommand.ExecuteNonQuery();
-    using var insertCommand2 = connection.CreateCommand();
-    insertCommand2.CommandText = @"
-        INSERT INTO observation (observation_id, author_id, text, pub_date) VALUES
-        (1, 1, 'A big gray bird in a pond at DR byen', '1672531200'),
-        (2, 2, 'A heron', '1672617600')";
-    insertCommand2.ExecuteNonQuery();
-}
+            Taxon taxon = new Taxon { dwc_TaxonID = "123", TaxonId = 1, VernacularName = "Heron" };
+            context.Taxa.Add(taxon);
+            context.SaveChanges();
+
+            context.Observations.AddRange(
+                new Observation
+                {
+                    Text = "A big gray bird in a pond at DR byen",
+                    TimeStamp = DateTime.Now,
+                    Author = context.Authors.First(a => a.Name == "Peter"),
+                    Taxon = taxon
+                },
+                new Observation
+                {
+                    Text = "A heron",
+                    TimeStamp = DateTime.Now,
+                    Author = context.Authors.First(a => a.Name == "Petra"),
+                    Taxon = taxon
+                });
+            context.SaveChanges();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (File.Exists(DbPath))
+        {
+            File.Delete(DbPath);
+        }
+    }
 }

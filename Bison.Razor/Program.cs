@@ -26,6 +26,8 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider
         .GetRequiredService<BisonDBContext>();
 
+    dbContext.Database.Migrate();
+
     DbInitializer.SeedDatabase(dbContext);
 }
 
