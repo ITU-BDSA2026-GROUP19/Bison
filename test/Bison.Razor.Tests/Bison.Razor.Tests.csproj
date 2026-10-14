@@ -24,9 +24,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Bison.Razor\Bison.Razor.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-  <None Include="../../Bison.Razor/Schema.sql" Link="Schema.sql" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>

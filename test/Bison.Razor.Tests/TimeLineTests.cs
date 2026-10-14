@@ -5,7 +5,7 @@ public class TimeLineTests
     [Fact]
     public async Task PublicTimelineContainsExampleObservations()
     {
-        var testDatabase = new TestDatabase();
+        using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/obs/");
@@ -17,7 +17,7 @@ public class TimeLineTests
     [Fact]
     public async Task PrivateTimelineContainsOnlyUserObservations()
     {
-        var testDatabase = new TestDatabase();
+        using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/obs/Peter");
@@ -29,7 +29,7 @@ public class TimeLineTests
     [Fact]
     public async Task UnknownUsersTimelineShowsNoObservations()
     {
-        var testDatabase = new TestDatabase();
+        using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/obs/UnknownUser");
@@ -42,7 +42,7 @@ public class TimeLineTests
     [Fact]
     public async Task UserWithNoObservationsShowsNoObservations()
     {
-        var testDatabase = new TestDatabase();
+        using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/obs/Paul");

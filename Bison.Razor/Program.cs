@@ -12,8 +12,6 @@ if (string.IsNullOrEmpty(dbPath))
     dbPath = Path.Combine(Path.GetTempPath(), "bison.db");
 }
 
-DBFacade dbFacade = new DBFacade(dbPath);
-builder.Services.AddSingleton(dbFacade);
 builder.Services.AddScoped<IObservationService, ObservationService>();
 
 string connectionString = $"Data Source={dbPath}";
@@ -27,6 +25,8 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider
         .GetRequiredService<BisonDBContext>();
+
+    dbContext.Database.Migrate();
 
     DbInitializer.SeedDatabase(dbContext);
 }
