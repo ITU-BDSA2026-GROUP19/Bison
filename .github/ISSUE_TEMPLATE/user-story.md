@@ -1,10 +1,8 @@
 ---
 name: User Story
 about: Template for creating user story issues.
-title: User story
+title: "[User story] "
 labels: user story
-assignees: HamDerY2
-
 ---
 
 **As a [role],**
