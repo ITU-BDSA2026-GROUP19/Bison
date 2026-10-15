@@ -1,5 +1,3 @@
-using Microsoft.Data.Sqlite;
-
 public record ObservationViewModel(string Author, string Message, string Timestamp);
 public record ObservationDetailsViewModel(int Id, string Author, string Message, string Timestamp);
 public record ProposalViewModel(string Author, int TaxonId, string Timestamp);
@@ -17,7 +15,7 @@ public interface IObservationService
 public class ObservationService : IObservationService
 {
     private const int PageSize = 32;
-    private IPostRepository _postRepository;
+    private readonly IPostRepository _postRepository;
 
     public ObservationService(IPostRepository db)
     {
@@ -81,38 +79,5 @@ public class ObservationService : IObservationService
             p.Taxon.TaxonId,
             p.TimeStamp.ToString("MM/dd/yy H:mm:ss")
         )).ToList();
-    }
-
-    private static ObservationViewModel MapRow(SqliteDataReader reader)
-    {
-        return new ObservationViewModel(
-            reader.GetString(0),
-            reader.GetString(1),
-            UnixTimeStampToDateTimeString(reader.GetInt64(2)));
-    }
-
-    private static ObservationDetailsViewModel MapDetailsRow(SqliteDataReader reader)
-    {
-        return new ObservationDetailsViewModel(
-            reader.GetInt32(0),
-            reader.GetString(1),
-            reader.GetString(2),
-            UnixTimeStampToDateTimeString(reader.GetInt64(3)));
-    }
-
-    private static ProposalViewModel MapProposalRow(SqliteDataReader reader)
-    {
-        return new ProposalViewModel(
-            reader.GetString(0),
-            reader.GetInt32(1),
-            UnixTimeStampToDateTimeString(reader.GetInt64(2)));
-    }
-
-    private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
-    {
-        // Unix timestamp is seconds past epoch
-        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        dateTime = dateTime.AddSeconds(unixTimeStamp);
-        return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
 }
