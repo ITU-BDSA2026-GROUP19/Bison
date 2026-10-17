@@ -1,3 +1,5 @@
+using Bison.Model;
+
 public interface IPostRepository
 {
     Task<List<Observation>> GetPostsByPageAsync(int pageNumber, int pageSize);

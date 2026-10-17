@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "dafny": {
+      "version": "4.11.0",
+      "commands": [
+        "dafny"
+      ],
+      "rollForward": false
+    }
+  }
+}

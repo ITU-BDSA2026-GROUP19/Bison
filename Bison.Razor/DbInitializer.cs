@@ -1,5 +1,5 @@
 using System;
-
+using Bison.Model;
 public static class DbInitializer
 {
     public static void SeedDatabase(BisonDBContext bisonContext)

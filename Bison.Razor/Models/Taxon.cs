@@ -1,3 +1,5 @@
+namespace Bison.Model;
+
 public class Taxon
 {
     public string dwc_TaxonID { get; set; }
@@ -5,4 +7,18 @@ public class Taxon
     public string? VernacularName { get; set; }
     public Taxon? Parent { get; set; }
     public List<Taxon> Children { get; set; } = new List<Taxon>();
+
+    public bool IsSubTaxon(Taxon ancestor)
+    {
+        Taxon? current = this;
+        while (current != null)
+        {
+            if (current == ancestor)
+            {
+                return true;
+            }
+            current = current.Parent;
+        }
+        return false;
+    }
 }

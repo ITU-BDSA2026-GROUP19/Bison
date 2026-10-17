@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Bison.Model;
 
 public class PostRepository : IPostRepository
 {
