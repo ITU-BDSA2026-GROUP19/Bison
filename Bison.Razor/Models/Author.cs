@@ -1,3 +1,5 @@
+namespace Bison.Model;
+
 public class Author
 {
     public int AuthorId { get; set; }

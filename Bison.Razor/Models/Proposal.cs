@@ -1,3 +1,5 @@
+namespace Bison.Model;
+
 public class Proposal : Post
 {
     public Observation Observation { get; set; }

@@ -1,3 +1,5 @@
+namespace Bison.Model;
+
 public class Taxon
 {
     public string dwc_TaxonID { get; set; }
