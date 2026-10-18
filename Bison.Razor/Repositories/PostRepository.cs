@@ -10,6 +10,19 @@ public class PostRepository : IPostRepository
         _context = context;
     }
 
+    public async Task<List<Observation>> GetAllObservationsAsync()
+    {
+        return await _context.Posts
+            .OfType<Observation>()
+            .OrderByDescending(p => p.TimeStamp)
+            .ThenByDescending(p => p.PostId)
+            .Include(p => p.Author)
+            .Include(p => p.Taxon)
+            .ThenInclude(t => t.Parent)
+            .ThenInclude(t => t.Parent)
+            .ThenInclude(t => t.Parent)
+            .ToListAsync();
+    }
     public async Task<List<Observation>> GetPostsByPageAsync(int pageNumber, int pageSize)
     {
         return await _context.Posts
@@ -63,6 +76,19 @@ public class PostRepository : IPostRepository
             .Include(p => p.Author)
             .Include(p => p.Taxon)
             .ToListAsync();
+    }
+
+    public async Task<List<Taxon>> GetTaxaAsync()
+    {
+        return await _context.Taxa
+            .OrderBy(t => t.TaxonId)
+            .ToListAsync();
+    }
+
+    public async Task<Taxon?> GetTaxonByIdAsync(int taxonId)
+    {
+        return await _context.Taxa
+            .FirstOrDefaultAsync(t => t.TaxonId == taxonId);
     }
 
     public async Task AddPostAsync(Post post)

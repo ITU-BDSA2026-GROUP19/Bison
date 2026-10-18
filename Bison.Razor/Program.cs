@@ -17,6 +17,7 @@ builder.Services.AddScoped<IObservationService, ObservationService>();
 string connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ITaxonFilterService, TaxonFilterService>();
 
 
 var app = builder.Build();

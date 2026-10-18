@@ -13,6 +13,17 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Restore Dafny tool
+        run: dotnet tool restore
+      - name: Install Z3 solver
+        run: |
+          wget https://github.com/dafny-lang/solver-builds/releases/download/snapshot-2023-08-02/z3-4.12.1-x64-ubuntu-20.04-bin.zip
+          unzip z3-4.12.1-x64-ubuntu-20.04-bin.zip
+          chmod +x z3-4.12.1
+      - name: Verify Dafny/Api
+        run: dotnet dafny verify Dafny/Api.dfy --allow-warnings --solver-path "$PWD/z3-4.12.1"
+      - name: Generate C# code from Dafny
+        run: dotnet dafny translate cs --include-runtime --allow-warnings --solver-path "$PWD/z3-4.12.1" Dafny/Api.dfy --output Bison.Razor/Generated.cs
       - name: Restore dependencies
         run: dotnet restore test/Bison.Razor.Tests/Bison.Razor.Tests.csproj
       - name: Build

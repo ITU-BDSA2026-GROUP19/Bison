@@ -12,16 +12,20 @@ public interface IObservationService
     public Task<List<ObservationDetailsViewModel>> GetObservationById(int id);
     public Task<List<ObservationViewModel>> GetComments(int observationId);
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
+    public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
+    public Task<List<Taxon>> GetTaxons();
 }
 
 public class ObservationService : IObservationService
 {
     private const int PageSize = 32;
     private readonly IPostRepository _postRepository;
+    private readonly ITaxonFilterService _taxonFilterService;
 
-    public ObservationService(IPostRepository db)
+    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService)
     {
         _postRepository = db;
+        _taxonFilterService = taxonFilterService;
     }
 
     public async Task<List<ObservationViewModel>> GetObservations(int page)
@@ -80,6 +84,30 @@ public class ObservationService : IObservationService
             p.Author.Name,
             p.Taxon.TaxonId,
             p.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+        )).ToList();
+    }
+
+    public Task<List<Taxon>> GetTaxons()
+    {
+        return _postRepository.GetTaxaAsync();
+    }
+
+    public async Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page)
+    {
+        var taxon = await _postRepository.GetTaxonByIdAsync(taxonId);
+        if (taxon == null)
+        {
+            return new List<ObservationViewModel>();
+        }
+
+        var observations = await _postRepository.GetAllObservationsAsync();
+        var filteredObservations = _taxonFilterService.Filter(taxon, observations);
+
+        return filteredObservations.Skip((page - 1) * PageSize)
+            .Take(PageSize).Select(o => new ObservationViewModel(
+            o.Author.Name,
+            o.Text,
+            o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
         )).ToList();
     }
 }

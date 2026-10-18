@@ -8,6 +8,19 @@
 <div>
     <h2> Public Timeline </h2>
 
+        <form method="get">
+        <label for="TaxonId">Filter by Taxon:</label>
+        <select name="taxonId" id="TaxonId">
+        <option value="">All Taxons</option>
+        @foreach (var taxon in Model.Taxons)
+        {
+            <option value="@taxon.TaxonId" Selected="@(Model.SelectedTaxonId == taxon.TaxonId)">@(taxon.VernacularName ?? taxon.dwc_TaxonID)</option>
+        }
+        </select>
+        <button type="submit">Filter</button>
+        </form>
+
+    
     @if (Model.Observations.Any())
     {
         <ul id="messagelist" class="observations">
@@ -33,12 +46,12 @@
 
 @if (Model.CurrentPage > 1)
 {
-    <a href="?page=@(Model.CurrentPage - 1)">Previous</a>
+    <a href="@(Model.SelectedTaxonId != null ? $"?page={(Model.CurrentPage - 1)}&taxonId={(Model.SelectedTaxonId)}" : $"?page={(Model.CurrentPage - 1)}")">Previous</a>
 }
 
 <span>Page @Model.CurrentPage</span>
 
 @if (Model.Observations.Count == 32)
 {
-    <a href="?page=@(Model.CurrentPage + 1)">Next</a>
+    <a href="@(Model.SelectedTaxonId != null ? $"?page={(Model.CurrentPage + 1)}&taxonId={(Model.SelectedTaxonId)}" : $"?page={(Model.CurrentPage + 1)}")">Next</a>
 }
