@@ -13,6 +13,12 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Restore Dafny tool
+        run: dotnet tool restore
+      - name: Verify Dafny/Api
+        run: dotnet dafny verify Dafny/Api.dfy --allow-warnings
+      - name: Generate C# code from Dafny
+        run: dotnet dafny translate cs --include-runtime --allow-warnings Dafny/Api.dfy --output Bison.Razor/Generated.cs
       - name: Restore dependencies
         run: dotnet restore test/Bison.Razor.Tests/Bison.Razor.Tests.csproj
       - name: Build
