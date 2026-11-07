@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Bison.Model;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class BisonDBContext : DbContext
+public class BisonDBContext : IdentityDbContext
 {
     public BisonDBContext(DbContextOptions<BisonDBContext> options) : base(options)
     {
