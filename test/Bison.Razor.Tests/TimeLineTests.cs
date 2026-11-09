@@ -8,7 +8,7 @@ public class TimeLineTests
         using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
-        var responseContent = await appHelper.GetAsync("/obs/");
+        var responseContent = await appHelper.GetAsync("/");
 
         Assert.Contains("A big gray bird in a pond at DR byen", responseContent);
         Assert.Contains("A heron", responseContent);
@@ -20,7 +20,7 @@ public class TimeLineTests
         using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
-        var responseContent = await appHelper.GetAsync("/obs/Peter");
+        var responseContent = await appHelper.GetAsync("/Peter");
 
         Assert.Contains("A big gray bird in a pond at DR byen", responseContent);
         Assert.DoesNotContain("A heron", responseContent);
@@ -32,7 +32,7 @@ public class TimeLineTests
         using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
-        var responseContent = await appHelper.GetAsync("/obs/UnknownUser");
+        var responseContent = await appHelper.GetAsync("/UnknownUser");
 
         Assert.Contains("There are no Observations so far.", responseContent);
         Assert.DoesNotContain("A heron", responseContent);
@@ -45,7 +45,7 @@ public class TimeLineTests
         using var testDatabase = new TestDatabase();
         using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
-        var responseContent = await appHelper.GetAsync("/obs/Paul");
+        var responseContent = await appHelper.GetAsync("/Paul");
 
         Assert.Contains("There are no Observations so far.", responseContent);
         Assert.DoesNotContain("A heron", responseContent);

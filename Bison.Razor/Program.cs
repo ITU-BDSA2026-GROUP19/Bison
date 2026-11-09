@@ -1,9 +1,24 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using Bison.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+})
+    .AddEntityFrameworkStores<BisonDBContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 var dbPath = Environment.GetEnvironmentVariable("BISONDBPATH");
 
@@ -22,14 +37,79 @@ builder.Services.AddScoped<ITaxonFilterService, TaxonFilterService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider
         .GetRequiredService<BisonDBContext>();
 
+    var userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<IdentityUser>>();
+
     dbContext.Database.Migrate();
 
     DbInitializer.SeedDatabase(dbContext);
+
+    var eduard = await userManager.FindByEmailAsync("edka@itu.dk");
+    if (eduard == null)
+    {
+        eduard = new IdentityUser
+        {
+            UserName = "Eduard",
+            Email = "edka@itu.dk",
+            EmailConfirmed = true
+        };
+        var result = await userManager.CreateAsync(eduard, "123456");
+
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+    }
+
+    var eduardAuthorExists = dbContext.Authors
+    .Any(a => a.Email == "edka@itu.dk");
+
+    if (!eduardAuthorExists)
+    {
+        dbContext.Authors.Add(new Author
+        {
+            Name = "Eduard",
+            Email = "edka@itu.dk"
+        });
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    var debasmita = await userManager.FindByEmailAsync("debloh@itu.dk");
+    if (debasmita == null)
+    {
+        debasmita = new IdentityUser
+        {
+            UserName = "Debasmita",
+            Email = "debloh@itu.dk",
+            EmailConfirmed = true
+        };
+        var result = await userManager.CreateAsync(debasmita, "password");
+
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+    }
+
+    var debasmitaAuthorExists = dbContext.Authors
+    .Any(a => a.Email == "debloh@itu.dk");
+
+    if (!debasmitaAuthorExists)
+    {
+        dbContext.Authors.Add(new Author
+        {
+            Name = "Debasmita",
+            Email = "debloh@itu.dk"
+        });
+
+        await dbContext.SaveChangesAsync();
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -44,6 +124,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorPages();
 

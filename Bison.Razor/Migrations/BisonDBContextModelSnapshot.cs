@@ -16,7 +16,7 @@ namespace Bison.Razor.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("Bison.Model.Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
@@ -35,7 +35,7 @@ namespace Bison.Razor.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("Post", b =>
+            modelBuilder.Entity("Bison.Model.Post", b =>
                 {
                     b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
@@ -67,7 +67,7 @@ namespace Bison.Razor.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Taxon", b =>
+            modelBuilder.Entity("Bison.Model.Taxon", b =>
                 {
                     b.Property<int>("TaxonId")
                         .ValueGeneratedOnAdd()
@@ -90,9 +90,201 @@ namespace Bison.Razor.Migrations
                     b.ToTable("Taxa");
                 });
 
-            modelBuilder.Entity("Comment", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.HasBaseType("Post");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Bison.Model.Comment", b =>
+                {
+                    b.HasBaseType("Bison.Model.Post");
 
                     b.Property<int>("ObservationPostId")
                         .HasColumnType("INTEGER");
@@ -102,9 +294,9 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Comment");
                 });
 
-            modelBuilder.Entity("Observation", b =>
+            modelBuilder.Entity("Bison.Model.Observation", b =>
                 {
-                    b.HasBaseType("Post");
+                    b.HasBaseType("Bison.Model.Post");
 
                     b.Property<int>("TaxonId")
                         .HasColumnType("INTEGER");
@@ -114,9 +306,9 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Observation");
                 });
 
-            modelBuilder.Entity("Proposal", b =>
+            modelBuilder.Entity("Bison.Model.Proposal", b =>
                 {
-                    b.HasBaseType("Post");
+                    b.HasBaseType("Bison.Model.Post");
 
                     b.Property<int>("ObservationPostId")
                         .HasColumnType("INTEGER");
@@ -140,9 +332,9 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Proposal");
                 });
 
-            modelBuilder.Entity("Post", b =>
+            modelBuilder.Entity("Bison.Model.Post", b =>
                 {
-                    b.HasOne("Author", "Author")
+                    b.HasOne("Bison.Model.Author", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -151,18 +343,69 @@ namespace Bison.Razor.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Taxon", b =>
+            modelBuilder.Entity("Bison.Model.Taxon", b =>
                 {
-                    b.HasOne("Taxon", "Parent")
+                    b.HasOne("Bison.Model.Taxon", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentTaxonId");
 
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Comment", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Observation", "Observation")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Bison.Model.Comment", b =>
+                {
+                    b.HasOne("Bison.Model.Observation", "Observation")
                         .WithMany("Comments")
                         .HasForeignKey("ObservationPostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -171,9 +414,9 @@ namespace Bison.Razor.Migrations
                     b.Navigation("Observation");
                 });
 
-            modelBuilder.Entity("Observation", b =>
+            modelBuilder.Entity("Bison.Model.Observation", b =>
                 {
-                    b.HasOne("Taxon", "Taxon")
+                    b.HasOne("Bison.Model.Taxon", "Taxon")
                         .WithMany()
                         .HasForeignKey("TaxonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -182,15 +425,15 @@ namespace Bison.Razor.Migrations
                     b.Navigation("Taxon");
                 });
 
-            modelBuilder.Entity("Proposal", b =>
+            modelBuilder.Entity("Bison.Model.Proposal", b =>
                 {
-                    b.HasOne("Observation", "Observation")
+                    b.HasOne("Bison.Model.Observation", "Observation")
                         .WithMany("Proposals")
                         .HasForeignKey("ObservationPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Taxon", "Taxon")
+                    b.HasOne("Bison.Model.Taxon", "Taxon")
                         .WithMany()
                         .HasForeignKey("TaxonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -201,17 +444,17 @@ namespace Bison.Razor.Migrations
                     b.Navigation("Taxon");
                 });
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("Bison.Model.Author", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Taxon", b =>
+            modelBuilder.Entity("Bison.Model.Taxon", b =>
                 {
                     b.Navigation("Children");
                 });
 
-            modelBuilder.Entity("Observation", b =>
+            modelBuilder.Entity("Bison.Model.Observation", b =>
                 {
                     b.Navigation("Comments");
 
