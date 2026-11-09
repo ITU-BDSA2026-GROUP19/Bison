@@ -75,7 +75,7 @@ private void WaitForServer()
 
         try
         {
-            using var response = _httpClient.GetAsync("/obs/").GetAwaiter().GetResult();
+            using var response = _httpClient.GetAsync("/").GetAwaiter().GetResult();
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
