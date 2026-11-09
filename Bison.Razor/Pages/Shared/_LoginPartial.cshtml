@@ -1,0 +1,25 @@
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <a asp-page="/UserTimeline"
+       asp-route-author="@User.Identity?.Name">My Observations</a>
+
+    <a asp-page="/Public">Public Observations</a>
+
+    <form method="post"
+          asp-area="Identity"
+          asp-page="/Account/Logout">
+        <button type="submit">
+            Logout [@User.Identity?.Name]
+        </button>
+    </form>
+}
+else
+{
+    <a asp-page="/Public">Public Observations</a>
+    <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <a asp-area="Identity" asp-page="/Account/Login">Login</a>
+}
