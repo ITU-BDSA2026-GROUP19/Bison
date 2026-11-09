@@ -30,6 +30,10 @@ public RazorAppHelper(string appPath, TestDatabase testDatabase)
     startInfo.ArgumentList.Add(baseUrl);
 
     startInfo.Environment["BISONDBPATH"] = testDatabase.DbPath;
+    startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+
+    startInfo.Environment["authentication__github__clientId"] = "test-client-id";
+    startInfo.Environment["authentication__github__clientSecret"] = "test-client-secret";
 
     _process = new Process { StartInfo = startInfo };
     _process.Start();

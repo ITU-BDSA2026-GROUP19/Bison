@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Bison.Model;
+using AspNet.Security.OAuth.GitHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,15 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<BisonDBContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
+
+
+builder.Services.AddAuthentication().AddGitHub(options =>
+    {
+        options.ClientId = builder.Configuration["authentication:github:clientId"]!;
+        options.ClientSecret = builder.Configuration["authentication:github:clientSecret"]!;
+        options.CallbackPath = "/signin-github";
+    });
+
 
 var dbPath = Environment.GetEnvironmentVariable("BISONDBPATH");
 
