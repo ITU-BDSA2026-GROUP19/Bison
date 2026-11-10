@@ -6,7 +6,7 @@ public class TimeLineTests
     public async Task PublicTimelineContainsExampleObservations()
     {
         using var testDatabase = new TestDatabase();
-        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
+        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/");
 
@@ -18,7 +18,7 @@ public class TimeLineTests
     public async Task PrivateTimelineContainsOnlyUserObservations()
     {
         using var testDatabase = new TestDatabase();
-        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
+        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/Peter");
 
@@ -30,7 +30,7 @@ public class TimeLineTests
     public async Task UnknownUsersTimelineShowsNoObservations()
     {
         using var testDatabase = new TestDatabase();
-        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
+        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/UnknownUser");
 
@@ -43,7 +43,7 @@ public class TimeLineTests
     public async Task UserWithNoObservationsShowsNoObservations()
     {
         using var testDatabase = new TestDatabase();
-        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "Bison.Razor"), testDatabase);
+        using var appHelper = new RazorAppHelper(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Bison.Razor"), testDatabase);
 
         var responseContent = await appHelper.GetAsync("/Paul");
 
