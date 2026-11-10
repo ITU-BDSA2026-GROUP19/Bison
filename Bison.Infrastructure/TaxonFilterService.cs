@@ -1,5 +1,7 @@
 using Bison.Core;
 
+namespace Bison.Infrastructure;
+
 public interface ITaxonFilterService
 {
     List<Observation> Filter(Taxon root, List<Observation> obs);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Bison.Core;
 using AspNet.Security.OAuth.GitHub;
+using Bison.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

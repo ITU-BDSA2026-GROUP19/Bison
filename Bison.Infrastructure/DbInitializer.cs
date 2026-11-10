@@ -1,3 +1,5 @@
+namespace Bison.Infrastructure;
+
 using System;
 using Bison.Core;
 public static class DbInitializer

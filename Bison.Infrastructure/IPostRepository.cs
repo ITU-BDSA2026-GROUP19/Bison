@@ -1,3 +1,5 @@
+namespace Bison.Infrastructure;
+
 using Bison.Core;
 
 public interface IPostRepository

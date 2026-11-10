@@ -1,3 +1,5 @@
+namespace Bison.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
 using Bison.Core;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

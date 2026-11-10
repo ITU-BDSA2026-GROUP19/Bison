@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Bison.Core;
+using Bison.Infrastructure;
 
 namespace Bison.Razor.Tests;
 
