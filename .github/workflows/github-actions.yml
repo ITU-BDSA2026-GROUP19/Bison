@@ -25,8 +25,8 @@ jobs:
       - name: Generate C# code from Dafny
         run: dotnet dafny translate cs --include-runtime --allow-warnings --solver-path "$PWD/z3-4.12.1" Dafny/Api.dfy --output Bison.Razor/Generated.cs
       - name: Restore dependencies
-        run: dotnet restore test/Bison.Razor.Tests/Bison.Razor.Tests.csproj
+        run: dotnet restore Bison.Razor.Tests/Bison.Razor.Tests.csproj
       - name: Build
-        run: dotnet build test/Bison.Razor.Tests/Bison.Razor.Tests.csproj --no-restore
+        run: dotnet build Bison.Razor.Tests/Bison.Razor.Tests.csproj --no-restore
       - name: Test
-        run: dotnet test test/Bison.Razor.Tests/Bison.Razor.Tests.csproj --no-build --verbosity normal
+        run: dotnet test Bison.Razor.Tests/Bison.Razor.Tests.csproj --no-build --verbosity normal
