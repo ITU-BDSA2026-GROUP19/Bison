@@ -1,4 +1,4 @@
-using Bison.Model;
+using Bison.Core;
 
 
 // Licensed to the .NET Foundation under one or more agreements.

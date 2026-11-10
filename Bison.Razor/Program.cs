@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
-using Bison.Model;
+using Bison.Core;
 using AspNet.Security.OAuth.GitHub;
 
 var builder = WebApplication.CreateBuilder(args);

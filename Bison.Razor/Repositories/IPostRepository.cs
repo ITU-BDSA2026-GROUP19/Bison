@@ -1,4 +1,4 @@
-using Bison.Model;
+using Bison.Core;
 
 public interface IPostRepository
 {

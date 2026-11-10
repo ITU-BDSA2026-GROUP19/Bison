@@ -24,4 +24,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Bison.Infrastructure\Bison.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
