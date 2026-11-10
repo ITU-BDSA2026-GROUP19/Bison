@@ -1,5 +1,4 @@
 using Bison.Core;
-using Bison.Infrastructure;
 
 namespace Bison.Infrastructure;
 
