@@ -1,5 +1,7 @@
+namespace Bison.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
-using Bison.Model;
+using Bison.Core;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 public class BisonDBContext : IdentityDbContext

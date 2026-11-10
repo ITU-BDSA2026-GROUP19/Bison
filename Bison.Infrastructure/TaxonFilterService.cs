@@ -1,5 +1,6 @@
+using Bison.Core;
 
-using Bison.Model;
+namespace Bison.Infrastructure;
 
 public interface ITaxonFilterService
 {

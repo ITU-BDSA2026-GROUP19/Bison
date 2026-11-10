@@ -17,8 +17,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Bison.Model;
 using Microsoft.EntityFrameworkCore;
+using Bison.Core;
+using Bison.Infrastructure;
 
 namespace Bison.Razor.Areas.Identity.Pages.Account
 {

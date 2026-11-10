@@ -1,6 +1,3 @@
-using Bison.Model;
-
-
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
@@ -21,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Bison.Core;
+using Bison.Infrastructure;
 
 namespace Bison.Razor.Areas.Identity.Pages.Account
 {

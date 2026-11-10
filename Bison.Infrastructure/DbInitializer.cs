@@ -1,5 +1,7 @@
+namespace Bison.Infrastructure;
+
 using System;
-using Bison.Model;
+using Bison.Core;
 public static class DbInitializer
 {
     public static void SeedDatabase(BisonDBContext bisonContext)

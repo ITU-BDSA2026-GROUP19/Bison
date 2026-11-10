@@ -1,4 +1,4 @@
-module {:extern "Bison.Model"} FilterLib {
+module {:extern "Bison.Core"} FilterLib {
 class {:extern "Taxon"} Taxon {
 function {:extern} IsSubTaxon(ancestor: Taxon): bool
 }
