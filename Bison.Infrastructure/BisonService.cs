@@ -32,7 +32,8 @@ public class ObservationService : IObservationService
             return observations.Select(o => new ObservationViewModel(
                 o.Author.Name,
                 o.Text,
-                o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+                o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+                o.PicturePath
             )).ToList();
     }
 
@@ -42,7 +43,8 @@ public class ObservationService : IObservationService
         return observations.Select(o => new ObservationViewModel(
             o.Author.Name,
             o.Text,
-            o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+            o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            o.PicturePath
         )).ToList();
     }
 
@@ -60,7 +62,8 @@ public class ObservationService : IObservationService
                 observation.PostId,
                 observation.Author.Name,
                 observation.Text,
-                observation.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+                observation.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+                observation.PicturePath
             )
         };
     }
@@ -71,7 +74,8 @@ public class ObservationService : IObservationService
         return comments.Select(c => new ObservationViewModel(
             c.Author.Name,
             c.Text,
-            c.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+            c.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            null
         )).ToList();
     }
 
@@ -105,7 +109,8 @@ public class ObservationService : IObservationService
             .Take(PageSize).Select(o => new ObservationViewModel(
             o.Author.Name,
             o.Text,
-            o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+            o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            o.PicturePath
         )).ToList();
     }
 }
