@@ -1,4 +1,5 @@
 using Bison.Core;
+using Microsoft.AspNetCore.Http;
 
 namespace Bison.Infrastructure;
 
@@ -12,6 +13,7 @@ public interface IObservationService
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
+    public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
 }
 
 public class ObservationService : IObservationService
@@ -19,11 +21,13 @@ public class ObservationService : IObservationService
     private const int PageSize = 32;
     private readonly IPostRepository _postRepository;
     private readonly ITaxonFilterService _taxonFilterService;
+    private readonly IImageService _imageService;
 
-    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService)
+    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService, IImageService imageService)
     {
         _postRepository = db;
         _taxonFilterService = taxonFilterService;
+        _imageService = imageService;
     }
 
     public async Task<List<ObservationViewModel>> GetObservations(int page)
@@ -112,5 +116,21 @@ public class ObservationService : IObservationService
             o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
             o.PicturePath
         )).ToList();
+    }
+
+    public async Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile)
+    {
+        var observation = await _postRepository.GetObservationByIdAsync(observationId);
+        if (observation == null || observation.Author.Email != authorEmail)
+        {
+            return false;
+        }
+        if (!await _imageService.ValidateImageAsync(imageFile))
+        {
+            return false;
+        }
+        observation.PicturePath = await _imageService.SaveImageAsync(imageFile);
+        await _postRepository.UpdatePostAsync(observation);
+        return true;
     }
 }
