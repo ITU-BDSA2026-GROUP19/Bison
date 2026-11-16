@@ -55,6 +55,7 @@ using (var scope = app.Services.CreateAsyncScope())
 
     dbContext.Database.Migrate();
 
+    Console.WriteLine($"DATABASE PATH: {dbContext.Database.GetDbConnection().DataSource}");
     DbInitializer.SeedDatabase(dbContext);
 }
 

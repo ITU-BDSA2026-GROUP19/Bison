@@ -136,6 +136,7 @@ div.page ul.observations li {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   min-height: 48px;
+  display: flow-root;
 }
 
 div.page ul.observations p {
@@ -143,8 +144,10 @@ div.page ul.observations p {
 }
 
 div.page ul.observations li img {
-  float: left;
-  padding: 0 10px 0 0;
+    float: left;
+    max-width: 250px;
+    height: auto;
+    padding: 0 10px 5px 0;
 }
 
 div.page ul.observations li small {

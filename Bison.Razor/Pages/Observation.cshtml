@@ -8,6 +8,26 @@
     <small>(@Model.Observation.Timestamp)</small>
 </p>
 
+@if (!string.IsNullOrEmpty(Model.Observation.PicturePath))
+{
+    <img src="@Model.Observation.PicturePath"
+         alt="Observation picture"
+         style="max-width: 500px;" />
+}
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="@Model.Observation.Id" />
+
+        <input type="file" name="ImageFile" accept="image/*" />
+
+        <button type="submit" asp-page-handler="UploadPicture">
+            Upload picture
+        </button>
+    </form>
+}
+
 <h3>Proposals</h3>
 
 @if (Model.Proposals.Count == 0)
