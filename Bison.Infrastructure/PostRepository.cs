@@ -114,4 +114,9 @@ public class PostRepository : IPostRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<Author?> GetAuthorByNameAsync(string name)
+    {
+        return await _context.Authors.FirstOrDefaultAsync(a => a.Name == name);
+    }
 }
