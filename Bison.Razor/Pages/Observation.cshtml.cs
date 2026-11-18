@@ -9,7 +9,7 @@ public class ObservationModel : PageModel
 {
     private readonly IObservationService _service;
 
-    public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "", "");
+    public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "");
     public List<ObservationViewModel> Comments { get; set; } = new List<ObservationViewModel>();
     public List<ProposalViewModel> Proposals { get; set; } = new List<ProposalViewModel>();
 

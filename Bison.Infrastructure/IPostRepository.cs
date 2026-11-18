@@ -15,5 +15,4 @@ public interface IPostRepository
     Task<List<Proposal>> GetProposalsByObservationIdAsync(int observationId);
     Task<List<Taxon>> GetTaxaAsync();
     Task<Taxon?> GetTaxonByIdAsync(int taxonId);
-    Task<Author?> GetAuthorByNameAsync(string name);
 }
