@@ -43,6 +43,26 @@
     </p>
 }
 
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <form method="post" asp-page-handler="CreateProposal">
+        <input type="hidden" name="id" value="@Model.Observation.Id" />
+
+        <select asp-for="SelectedTaxonId" required>
+            <option value="">Select a taxon...</option>
+
+            @foreach (var taxon in Model.Taxons)
+            {
+                <option value="@taxon.TaxonId">
+                    @(taxon.VernacularName ?? taxon.dwc_TaxonID)
+                </option>
+            }
+        </select>
+
+        <button type="submit">Submit proposal</button>
+    </form>
+}
+
 <h3>Comments</h3>
 
 @if (Model.Comments.Count == 0)
