@@ -14,6 +14,16 @@ public class UserTimelineModel : PageModel
 
     public int CurrentPage {get; set; }
 
+    public bool IsOwnTimeline { get; set; }
+
+    [BindProperty]
+    public string ObservationText { get; set; } = "";
+
+    [BindProperty]
+    public int NewObservationTaxonId { get; set; }
+
+    public List<Taxon> Taxons { get; set; } = new();
+
     [BindProperty]
     public IFormFile? ImageFile { get; set; }
 
@@ -30,8 +40,51 @@ public class UserTimelineModel : PageModel
         }
 
         CurrentPage = page;
+
+        Taxons = await _service.GetTaxons();
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (!string.IsNullOrEmpty(authorEmail))
+        {
+            IsOwnTimeline = await _service.IsAuthor(authorEmail, author);
+        }
+
         Observations = await _service.GetObservationsFromAuthor(author, page);
+
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostCreateObservationAsync(string author)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+            return Challenge();
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (string.IsNullOrEmpty(authorEmail))
+            return Forbid();
+
+        if (!await _service.IsAuthor(authorEmail, author))
+            return Forbid();
+
+        bool success = await _service.CreateObservation(
+            authorEmail,
+            ObservationText,
+            NewObservationTaxonId,
+            ImageFile
+        );
+
+        if (!success)
+        {
+            IsOwnTimeline = true;
+            Taxons = await _service.GetTaxons();
+            Observations = await _service.GetObservationsFromAuthor(author, 1);
+            CurrentPage = 1;
+            return Page();
+        }
+
+        return RedirectToPage(new { author });
     }
 
     public async Task<IActionResult> OnPostUploadPictureAsync(string author, int id, int page)

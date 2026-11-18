@@ -9,6 +9,40 @@
 <div>
     <h2> @routeName's Observations </h2>
 
+    @if (Model.IsOwnTimeline)
+    {
+        <div class="observationbox">
+            <h3>Create Observation</h3>
+
+            <form method="post" enctype="multipart/form-data">
+                <p>
+                    <textarea asp-for="ObservationText" required></textarea>
+                </p>
+
+                <p>
+                    <select asp-for="NewObservationTaxonId" required>
+                        <option value="">Select an animal</option>
+                        @foreach (var taxon in Model.Taxons)
+                        {
+                            <option value="@taxon.TaxonId">
+                                @(taxon.VernacularName ?? taxon.dwc_TaxonID)
+                            </option>
+                        }
+                    </select>
+                </p>
+
+                <p>
+                    <label asp-for="ImageFile">Picture (optional)</label>
+                    <input asp-for="ImageFile" type="file" accept="image/*" />
+                </p>
+
+                <button type="submit" asp-page-handler="CreateObservation">
+                    Submit Observation
+                </button>
+            </form>
+        </div>
+    }
+
     @if (Model.Observations.Any())
     {
         <ul id="messagelist" class="observations">
