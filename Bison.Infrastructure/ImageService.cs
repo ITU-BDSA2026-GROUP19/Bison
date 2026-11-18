@@ -19,7 +19,7 @@ public class ImageService : IImageService
             return Task.FromResult(false);
         }
 
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
         var extension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
 
         if (!allowedExtensions.Contains(extension))

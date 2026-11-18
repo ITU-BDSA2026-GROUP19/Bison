@@ -34,7 +34,9 @@ public class ObservationService : IObservationService
     {
             List<Observation> observations = await _postRepository.GetPostsByPageAsync(page, PageSize);
             return observations.Select(o => new ObservationViewModel(
+                o.PostId,
                 o.Author.Name,
+                o.Author.Email,
                 o.Text,
                 o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
                 o.PicturePath
@@ -45,7 +47,9 @@ public class ObservationService : IObservationService
     {
         List<Observation> observations = await _postRepository.GetPostsByAuthorAsync(author, page, PageSize);
         return observations.Select(o => new ObservationViewModel(
+            o.PostId,
             o.Author.Name,
+            o.Author.Email,
             o.Text,
             o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
             o.PicturePath
@@ -76,7 +80,9 @@ public class ObservationService : IObservationService
     {
         var comments = await _postRepository.GetCommentsByObservationIdAsync(observationId);
         return comments.Select(c => new ObservationViewModel(
+            c.PostId,
             c.Author.Name,
+            c.Author.Email,
             c.Text,
             c.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
             null
@@ -111,7 +117,9 @@ public class ObservationService : IObservationService
 
         return filteredObservations.Skip((page - 1) * PageSize)
             .Take(PageSize).Select(o => new ObservationViewModel(
+            o.PostId,
             o.Author.Name,
+            o.Author.Email,
             o.Text,
             o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
             o.PicturePath
