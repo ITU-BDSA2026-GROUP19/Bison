@@ -18,6 +18,9 @@ public class ObservationModel : PageModel
     [BindProperty]
     public IFormFile? ImageFile { get; set; }
 
+    [BindProperty]
+    public string CommentText { get; set; } = "";
+
     public ObservationModel(IObservationService service)
     {
         _service = service;
@@ -42,6 +45,34 @@ public class ObservationModel : PageModel
         Proposals = await _service.GetProposals(id);
 
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostCreateCommentAsync(int id)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Challenge();
+        }
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (string.IsNullOrEmpty(authorEmail))
+        {
+            return Forbid();
+        }
+
+        bool success = await _service.CreateComment(
+            authorEmail,
+            id,
+            CommentText
+        );
+
+        if (!success)
+        {
+            return BadRequest();
+        }
+
+        return RedirectToPage(new { id });
     }
 
     public async Task<IActionResult> OnPostUploadPictureAsync(int id)

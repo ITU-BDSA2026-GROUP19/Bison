@@ -57,3 +57,14 @@
         <small>(@comment.Timestamp)</small>
     </p>
 }
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <form method="post" asp-page-handler="CreateComment">
+        <input type="hidden" name="id" value="@Model.Observation.Id" />
+
+        <textarea asp-for="CommentText"
+                  placeholder="Write your comment..."
+                    required></textarea>
+        <button type="submit">Submit comment</button>
+    </form>
+}
