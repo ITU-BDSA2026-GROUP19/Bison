@@ -14,6 +14,7 @@ public interface IObservationService
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
     public Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile);
+    public Task<bool> CreateComment(string authorEmail, int observationId, string text);
     public Task<bool> IsAuthor(string authorEmail, string authorName);
     public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
 }
@@ -163,6 +164,34 @@ public class ObservationService : IObservationService
         };
 
         await _postRepository.AddPostAsync(observation);
+
+        return true;
+    }
+
+    public async Task<bool> CreateComment(string authorEmail, int observationId, string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        var author = await _postRepository.GetAuthorByEmailAsync(authorEmail);
+        var observation = await _postRepository.GetObservationByIdAsync(observationId);
+
+        if (author == null || observation == null)
+        {
+            return false;
+        }
+
+        var comment = new Comment
+        {
+            Text = text,
+            TimeStamp = DateTime.UtcNow,
+            Author = author,
+            Observation = observation
+        };
+
+        await _postRepository.AddPostAsync(comment);
 
         return true;
     }
