@@ -93,6 +93,12 @@ public class PostRepository : IPostRepository
             .FirstOrDefaultAsync(t => t.TaxonId == taxonId);
     }
 
+    public async Task<Author?> GetAuthorByEmailAsync(string email)
+    {
+        return await _context.Authors
+            .FirstOrDefaultAsync(a => a.Email == email);
+    }
+
     public async Task AddPostAsync(Post post)
     {
         _context.Posts.Add(post);

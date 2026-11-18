@@ -13,6 +13,8 @@ public interface IObservationService
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
+    public Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile);
+    public Task<bool> IsAuthor(string authorEmail, string authorName);
     public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
 }
 
@@ -124,6 +126,51 @@ public class ObservationService : IObservationService
             o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
             o.PicturePath
         )).ToList();
+    }
+
+    public async Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        var author = await _postRepository.GetAuthorByEmailAsync(authorEmail);
+        var taxon = await _postRepository.GetTaxonByIdAsync(taxonId);
+
+        if (author == null || taxon == null)
+        {
+            return false;
+        }
+
+        string? picturePath = null;
+
+        if (imageFile != null && imageFile.Length > 0)
+        {
+            if (!await _imageService.ValidateImageAsync(imageFile))
+                return false;
+
+            picturePath = await _imageService.SaveImageAsync(imageFile);
+        }
+
+        var observation = new Observation
+        {
+            Text = text,
+            TimeStamp = DateTime.UtcNow,
+            Author = author,
+            Taxon = taxon,
+            PicturePath = picturePath
+        };
+
+        await _postRepository.AddPostAsync(observation);
+
+        return true;
+    }
+
+    public async Task<bool> IsAuthor(string authorEmail, string authorName)
+    {
+        var author = await _postRepository.GetAuthorByEmailAsync(authorEmail);
+        return author != null && author.Name == authorName;
     }
 
     public async Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile)

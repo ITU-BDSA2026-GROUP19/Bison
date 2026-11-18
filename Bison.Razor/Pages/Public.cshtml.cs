@@ -16,6 +16,12 @@ public class PublicModel : PageModel
     public int? SelectedTaxonId { get; set; }
 
     [BindProperty]
+    public string ObservationText { get; set; } = "";
+
+    [BindProperty]
+    public int NewObservationTaxonId { get; set; }
+
+    [BindProperty]
     public IFormFile? ImageFile { get; set; }
 
     public PublicModel(IObservationService service)
@@ -44,6 +50,34 @@ public class PublicModel : PageModel
             Observations = await _service.GetObservations(page);
         }
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostCreateObservationAsync()
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+            return Challenge();
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (string.IsNullOrEmpty(authorEmail))
+            return Forbid();
+
+        bool success = await _service.CreateObservation(
+            authorEmail,
+            ObservationText,
+            NewObservationTaxonId,
+            ImageFile
+        );
+
+        if (!success)
+        {
+            Taxons = await _service.GetTaxons();
+            Observations = await _service.GetObservations(1);
+            CurrentPage = 1;
+            return Page();
+        }
+
+        return RedirectToPage("/Public");
     }
 
     public async Task<IActionResult> OnPostUploadPictureAsync(int id, int page, int? taxonId)

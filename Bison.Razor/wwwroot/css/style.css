@@ -290,3 +290,15 @@ ul.nav li a {
 ul.nav li a:hover {
     background-color: #8b4949;
 }
+
+div.page div.observationbox textarea {
+    width: 585px;
+    height: 60px;
+    background: white;
+    border: 1px solid #e6c0bf;
+    padding: 2px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    border-radius: 2px;
+    color: #571010;
+}
