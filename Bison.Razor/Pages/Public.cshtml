@@ -8,6 +8,40 @@
 <div>
     <h2> Public Timeline </h2>
 
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="observationbox">
+            <h3>Create Observation</h3>
+
+            <form method="post" enctype="multipart/form-data">
+                <p>
+                    <textarea asp-for="ObservationText" required></textarea>
+                </p>
+
+                <p>
+                    <select asp-for="NewObservationTaxonId" required>
+                        <option value="">Select an animal</option>
+                        @foreach (var taxon in Model.Taxons)
+                        {
+                            <option value="@taxon.TaxonId">
+                                @(taxon.VernacularName ?? taxon.dwc_TaxonID)
+                            </option>
+                        }
+                    </select>
+                </p>
+
+                <p>
+                    <label asp-for="ImageFile">Picture (optional)</label>
+                    <input asp-for="ImageFile" type="file" accept="image/*" />
+                </p>
+
+                <button type="submit" asp-page-handler="CreateObservation">
+                    Submit Observation
+                </button>
+            </form>
+        </div>
+    }
+
         <form method="get">
         <label for="TaxonId">Filter by Taxon:</label>
         <select name="taxonId" id="TaxonId">

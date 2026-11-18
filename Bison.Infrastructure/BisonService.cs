@@ -13,7 +13,7 @@ public interface IObservationService
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
-    public Task<bool> CreateObservation(string authorEmail, string text, int taxonId);
+    public Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile);
     public Task<bool> IsAuthor(string authorEmail, string authorName);
     public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
 }
@@ -128,7 +128,7 @@ public class ObservationService : IObservationService
         )).ToList();
     }
 
-    public async Task<bool> CreateObservation(string authorEmail, string text, int taxonId)
+    public async Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -143,12 +143,23 @@ public class ObservationService : IObservationService
             return false;
         }
 
+        string? picturePath = null;
+
+        if (imageFile != null && imageFile.Length > 0)
+        {
+            if (!await _imageService.ValidateImageAsync(imageFile))
+                return false;
+
+            picturePath = await _imageService.SaveImageAsync(imageFile);
+        }
+
         var observation = new Observation
         {
             Text = text,
             TimeStamp = DateTime.UtcNow,
             Author = author,
-            Taxon = taxon
+            Taxon = taxon,
+            PicturePath = picturePath
         };
 
         await _postRepository.AddPostAsync(observation);
