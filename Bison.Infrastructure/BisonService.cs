@@ -1,4 +1,5 @@
 using Bison.Core;
+using Microsoft.AspNetCore.Http;
 
 namespace Bison.Infrastructure;
 
@@ -12,6 +13,7 @@ public interface IObservationService
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
+    public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
 }
 
 public class ObservationService : IObservationService
@@ -19,20 +21,25 @@ public class ObservationService : IObservationService
     private const int PageSize = 32;
     private readonly IPostRepository _postRepository;
     private readonly ITaxonFilterService _taxonFilterService;
+    private readonly IImageService _imageService;
 
-    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService)
+    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService, IImageService imageService)
     {
         _postRepository = db;
         _taxonFilterService = taxonFilterService;
+        _imageService = imageService;
     }
 
     public async Task<List<ObservationViewModel>> GetObservations(int page)
     {
             List<Observation> observations = await _postRepository.GetPostsByPageAsync(page, PageSize);
             return observations.Select(o => new ObservationViewModel(
+                o.PostId,
                 o.Author.Name,
+                o.Author.Email,
                 o.Text,
-                o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+                o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+                o.PicturePath
             )).ToList();
     }
 
@@ -40,9 +47,12 @@ public class ObservationService : IObservationService
     {
         List<Observation> observations = await _postRepository.GetPostsByAuthorAsync(author, page, PageSize);
         return observations.Select(o => new ObservationViewModel(
+            o.PostId,
             o.Author.Name,
+            o.Author.Email,
             o.Text,
-            o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+            o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            o.PicturePath
         )).ToList();
     }
 
@@ -60,7 +70,8 @@ public class ObservationService : IObservationService
                 observation.PostId,
                 observation.Author.Name,
                 observation.Text,
-                observation.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+                observation.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+                observation.PicturePath
             )
         };
     }
@@ -69,9 +80,12 @@ public class ObservationService : IObservationService
     {
         var comments = await _postRepository.GetCommentsByObservationIdAsync(observationId);
         return comments.Select(c => new ObservationViewModel(
+            c.PostId,
             c.Author.Name,
+            c.Author.Email,
             c.Text,
-            c.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+            c.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            null
         )).ToList();
     }
 
@@ -103,9 +117,28 @@ public class ObservationService : IObservationService
 
         return filteredObservations.Skip((page - 1) * PageSize)
             .Take(PageSize).Select(o => new ObservationViewModel(
+            o.PostId,
             o.Author.Name,
+            o.Author.Email,
             o.Text,
-            o.TimeStamp.ToString("MM/dd/yy H:mm:ss")
+            o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            o.PicturePath
         )).ToList();
+    }
+
+    public async Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile)
+    {
+        var observation = await _postRepository.GetObservationByIdAsync(observationId);
+        if (observation == null || observation.Author.Email != authorEmail)
+        {
+            return false;
+        }
+        if (!await _imageService.ValidateImageAsync(imageFile))
+        {
+            return false;
+        }
+        observation.PicturePath = await _imageService.SaveImageAsync(imageFile);
+        await _postRepository.UpdatePostAsync(observation);
+        return true;
     }
 }

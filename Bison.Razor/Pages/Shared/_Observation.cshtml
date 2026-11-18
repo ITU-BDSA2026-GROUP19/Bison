@@ -1,0 +1,36 @@
+@using Bison.Core
+@using System.Security.Claims
+@model ObservationViewModel
+
+@{
+    var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+    var isOwner = !string.IsNullOrEmpty(authorEmail)
+                  && authorEmail == Model.AuthorEmail;
+}
+
+<li>
+    @if (!string.IsNullOrEmpty(Model.PicturePath))
+    {
+        <img src="@Model.PicturePath"
+             alt="Observation picture" />
+    }
+
+    <p>
+        <strong>
+            <a href="/@Model.Author">@Model.Author</a>
+        </strong>
+        @Model.Message
+        <small>&mdash; @Model.Timestamp</small>
+    </p>
+
+    @if (isOwner && string.IsNullOrEmpty(Model.PicturePath))
+    {
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="file" name="ImageFile" accept="image/*" required />
+            <button type="submit" asp-page-handler="UploadPicture">
+                Upload picture
+            </button>
+        </form>
+    }
+</li>

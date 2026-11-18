@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Bison.Core;
 using Bison.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Bison.Razor.Pages;
 
@@ -9,9 +11,12 @@ public class ObservationModel : PageModel
 {
     private readonly IObservationService _service;
 
-    public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "");
+    public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "", null);
     public List<ObservationViewModel> Comments { get; set; } = new List<ObservationViewModel>();
     public List<ProposalViewModel> Proposals { get; set; } = new List<ProposalViewModel>();
+
+    [BindProperty]
+    public IFormFile? ImageFile { get; set; }
 
     public ObservationModel(IObservationService service)
     {
@@ -37,5 +42,38 @@ public class ObservationModel : PageModel
         Proposals = await _service.GetProposals(id);
 
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostUploadPictureAsync(int id)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Challenge();
+        }
+
+        if (ImageFile == null)
+        {
+            return RedirectToPage(new { id });
+        }
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (string.IsNullOrEmpty(authorEmail))
+        {
+            return Forbid();
+        }
+
+        bool success = await _service.AddPictureToObservationAsync(
+            id,
+            authorEmail,
+            ImageFile
+        );
+
+        if (!success)
+        {
+            return Forbid();
+        }
+
+        return RedirectToPage(new { id });
     }
 }

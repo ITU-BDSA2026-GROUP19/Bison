@@ -43,6 +43,7 @@ string connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITaxonFilterService, TaxonFilterService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 
 var app = builder.Build();
@@ -54,6 +55,7 @@ using (var scope = app.Services.CreateAsyncScope())
 
     dbContext.Database.Migrate();
 
+    Console.WriteLine($"DATABASE PATH: {dbContext.Database.GetDbConnection().DataSource}");
     DbInitializer.SeedDatabase(dbContext);
 }
 

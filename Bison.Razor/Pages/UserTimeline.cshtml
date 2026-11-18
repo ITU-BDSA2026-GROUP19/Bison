@@ -14,15 +14,7 @@
         <ul id="messagelist" class="observations">
             @foreach (var ob in Model.Observations)
             {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@ob.Author">@ob.Author</a>
-                        </strong>
-                        @ob.Message
-                        <small>&mdash; @ob.Timestamp</small>
-                    </p>
-                </li>
+                <partial name="_Observation" model="ob" />
             }
         </ul>
     }
