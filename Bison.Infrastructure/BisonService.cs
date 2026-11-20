@@ -99,6 +99,7 @@ public class ObservationService : IObservationService
         return proposals.Select(p => new ProposalViewModel(
             p.Author.Name,
             p.Taxon.TaxonId,
+            p.Taxon.VernacularName ?? p.Taxon.dwc_TaxonID,
             p.TimeStamp.ToString("MM/dd/yy H:mm:ss")
         )).ToList();
     }

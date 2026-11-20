@@ -38,7 +38,7 @@
 @foreach (var proposal in Model.Proposals)
 {
     <p>
-        <strong>@proposal.Author</strong> proposed taxon @proposal.TaxonId
+        <strong>@proposal.Author</strong> proposed the taxon: => @proposal.TaxonName
         <small>(@proposal.Timestamp)</small>
     </p>
 }
