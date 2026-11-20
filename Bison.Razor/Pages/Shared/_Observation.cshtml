@@ -23,6 +23,8 @@
         <small>&mdash; @Model.Timestamp</small>
     </p>
 
+    <a href="/ob/@Model.Id">View observation</a>
+
     @if (isOwner && string.IsNullOrEmpty(Model.PicturePath))
     {
         <form method="post" enctype="multipart/form-data">

@@ -14,6 +14,8 @@ public interface IObservationService
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
     public Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile);
+    public Task<bool> CreateComment(string authorEmail, int observationId, string text);
+    public Task<bool> CreateProposal(string authorEmail, int observationId, int taxonId);
     public Task<bool> IsAuthor(string authorEmail, string authorName);
     public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
 }
@@ -97,6 +99,7 @@ public class ObservationService : IObservationService
         return proposals.Select(p => new ProposalViewModel(
             p.Author.Name,
             p.Taxon.TaxonId,
+            p.Taxon.VernacularName ?? p.Taxon.dwc_TaxonID,
             p.TimeStamp.ToString("MM/dd/yy H:mm:ss")
         )).ToList();
     }
@@ -163,6 +166,59 @@ public class ObservationService : IObservationService
         };
 
         await _postRepository.AddPostAsync(observation);
+
+        return true;
+    }
+
+    public async Task<bool> CreateComment(string authorEmail, int observationId, string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        var author = await _postRepository.GetAuthorByEmailAsync(authorEmail);
+        var observation = await _postRepository.GetObservationByIdAsync(observationId);
+
+        if (author == null || observation == null)
+        {
+            return false;
+        }
+
+        var comment = new Comment
+        {
+            Text = text,
+            TimeStamp = DateTime.UtcNow,
+            Author = author,
+            Observation = observation
+        };
+
+        await _postRepository.AddPostAsync(comment);
+
+        return true;
+    }
+
+    public async Task<bool> CreateProposal(string authorEmail, int observationId, int taxonId)
+    {
+        var author = await _postRepository.GetAuthorByEmailAsync(authorEmail);
+        var observation = await _postRepository.GetObservationByIdAsync(observationId);
+        var taxon = await _postRepository.GetTaxonByIdAsync(taxonId);
+
+        if (author == null || observation == null || taxon == null)
+        {
+            return false;
+        }
+
+        var proposal = new Proposal
+        {
+            Text = "",
+            TimeStamp = DateTime.UtcNow,
+            Author = author,
+            Observation = observation,
+            Taxon = taxon
+        };
+
+        await _postRepository.AddPostAsync(proposal);
 
         return true;
     }

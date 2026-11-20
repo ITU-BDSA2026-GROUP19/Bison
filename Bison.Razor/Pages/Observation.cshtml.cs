@@ -14,9 +14,16 @@ public class ObservationModel : PageModel
     public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "", null);
     public List<ObservationViewModel> Comments { get; set; } = new List<ObservationViewModel>();
     public List<ProposalViewModel> Proposals { get; set; } = new List<ProposalViewModel>();
+    public List<Taxon> Taxons { get; set; } = new List<Taxon>();
+
+    [BindProperty]
+    public int SelectedTaxonId { get; set; }
 
     [BindProperty]
     public IFormFile? ImageFile { get; set; }
+
+    [BindProperty]
+    public string CommentText { get; set; } = "";
 
     public ObservationModel(IObservationService service)
     {
@@ -38,10 +45,67 @@ public class ObservationModel : PageModel
         }
 
         Observation = found[0];
+        Taxons = await _service.GetTaxons();
         Comments = await _service.GetComments(id);
         Proposals = await _service.GetProposals(id);
 
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostCreateCommentAsync(int id)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Challenge();
+        }
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (string.IsNullOrEmpty(authorEmail))
+        {
+            return Forbid();
+        }
+
+        bool success = await _service.CreateComment(
+            authorEmail,
+            id,
+            CommentText
+        );
+
+        if (!success)
+        {
+            return BadRequest();
+        }
+
+        return RedirectToPage(new { id });
+    }
+
+    public async Task<IActionResult> OnPostCreateProposalAsync(int id)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Challenge();
+        }
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        if (string.IsNullOrEmpty(authorEmail))
+        {
+            return Forbid();
+        }
+
+        bool success = await _service.CreateProposal(
+            authorEmail,
+            id,
+            SelectedTaxonId
+        );
+
+        if (!success)
+        {
+            return BadRequest();
+        }
+
+        return RedirectToPage(new { id });
     }
 
     public async Task<IActionResult> OnPostUploadPictureAsync(int id)
