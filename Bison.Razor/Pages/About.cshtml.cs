@@ -2,8 +2,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Bison.Infrastructure;
 using Bison.Core;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bison.Razor.Pages;
+
+[Authorize]
 public class AboutModel : PageModel
 {
     private readonly IObservationService _service;
@@ -14,5 +18,29 @@ public class AboutModel : PageModel
     public AboutModel(IObservationService service)
     {
         _service = service;
+    }
+
+    public async Task<IActionResult> OnGet([FromQuery] int page)
+    {
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+        CurrentPage = page;
+
+        var authorEmail = User.FindFirstValue(ClaimTypes.Email);
+        var author = User.FindFirstValue(ClaimTypes.Name);
+
+        if (!string.IsNullOrEmpty(authorEmail) && !string.IsNullOrEmpty(author))
+        {
+            Observations = await _service.GetObservationsFromAuthor(author, page);
+        }
+        else
+        {
+            return Forbid();
+        }
+
+        return Page();
     }
 }
