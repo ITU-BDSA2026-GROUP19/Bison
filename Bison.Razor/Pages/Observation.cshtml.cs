@@ -11,7 +11,7 @@ public class ObservationModel : PageModel
 {
     private readonly IObservationService _service;
 
-    public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "", null);
+    public ObservationDetailsViewModel Observation { get; set; } = new ObservationDetailsViewModel(0, "", "", "", null, null);
     public List<ObservationViewModel> Comments { get; set; } = new List<ObservationViewModel>();
     public List<ProposalViewModel> Proposals { get; set; } = new List<ProposalViewModel>();
     public List<Taxon> Taxons { get; set; } = new List<Taxon>();
@@ -24,6 +24,9 @@ public class ObservationModel : PageModel
 
     [BindProperty]
     public string CommentText { get; set; } = "";
+
+    [BindProperty]
+    public string? PictureLicense { get; set; }
 
     public ObservationModel(IObservationService service)
     {
@@ -120,6 +123,12 @@ public class ObservationModel : PageModel
             return RedirectToPage(new { id });
         }
 
+        if (string.IsNullOrEmpty(PictureLicense))
+        {
+            ModelState.AddModelError("PictureLicense", "Picture license is required.");
+            return Page();
+        }
+
         var authorEmail = User.FindFirstValue(ClaimTypes.Email);
 
         if (string.IsNullOrEmpty(authorEmail))
@@ -130,7 +139,8 @@ public class ObservationModel : PageModel
         bool success = await _service.AddPictureToObservationAsync(
             id,
             authorEmail,
-            ImageFile
+            ImageFile,
+            PictureLicense
         );
 
         if (!success)

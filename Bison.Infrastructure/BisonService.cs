@@ -13,11 +13,11 @@ public interface IObservationService
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
-    public Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile);
+    public Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile, string? PictureLicense);
     public Task<bool> CreateComment(string authorEmail, int observationId, string text);
     public Task<bool> CreateProposal(string authorEmail, int observationId, int taxonId);
     public Task<bool> IsAuthor(string authorEmail, string authorName);
-    public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile);
+    public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile, string PictureLicense);
 }
 
 public class ObservationService : IObservationService
@@ -43,7 +43,8 @@ public class ObservationService : IObservationService
                 o.Author.Email,
                 o.Text,
                 o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
-                o.PicturePath
+                o.PicturePath,
+                o.PictureLicense
             )).ToList();
     }
 
@@ -56,7 +57,8 @@ public class ObservationService : IObservationService
             o.Author.Email,
             o.Text,
             o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
-            o.PicturePath
+            o.PicturePath,
+            o.PictureLicense
         )).ToList();
     }
 
@@ -75,7 +77,8 @@ public class ObservationService : IObservationService
                 observation.Author.Name,
                 observation.Text,
                 observation.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
-                observation.PicturePath
+                observation.PicturePath,
+                observation.PictureLicense
             )
         };
     }
@@ -89,6 +92,7 @@ public class ObservationService : IObservationService
             c.Author.Email,
             c.Text,
             c.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            null,
             null
         )).ToList();
     }
@@ -127,11 +131,12 @@ public class ObservationService : IObservationService
             o.Author.Email,
             o.Text,
             o.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
-            o.PicturePath
+            o.PicturePath,
+            o.PictureLicense
         )).ToList();
     }
 
-    public async Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile)
+    public async Task<bool> CreateObservation(string authorEmail, string text, int taxonId, IFormFile? imageFile, string? PictureLicense)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -150,6 +155,9 @@ public class ObservationService : IObservationService
 
         if (imageFile != null && imageFile.Length > 0)
         {
+            if (string.IsNullOrWhiteSpace(PictureLicense))
+                return false;
+
             if (!await _imageService.ValidateImageAsync(imageFile))
                 return false;
 
@@ -162,7 +170,8 @@ public class ObservationService : IObservationService
             TimeStamp = DateTime.UtcNow,
             Author = author,
             Taxon = taxon,
-            PicturePath = picturePath
+            PicturePath = picturePath,
+            PictureLicense = picturePath != null ? PictureLicense : null
         };
 
         await _postRepository.AddPostAsync(observation);
@@ -229,7 +238,7 @@ public class ObservationService : IObservationService
         return author != null && author.Name == authorName;
     }
 
-    public async Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile)
+    public async Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile, string PictureLicense)
     {
         var observation = await _postRepository.GetObservationByIdAsync(observationId);
         if (observation == null || observation.Author.Email != authorEmail)
@@ -241,6 +250,7 @@ public class ObservationService : IObservationService
             return false;
         }
         observation.PicturePath = await _imageService.SaveImageAsync(imageFile);
+        observation.PictureLicense = PictureLicense;
         await _postRepository.UpdatePostAsync(observation);
         return true;
     }

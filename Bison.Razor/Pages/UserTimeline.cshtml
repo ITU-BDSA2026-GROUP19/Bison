@@ -34,6 +34,17 @@
                 <p>
                     <label asp-for="ImageFile">Picture (optional)</label>
                     <input asp-for="ImageFile" type="file" accept="image/*" />
+
+                    <label asp-for="PictureLicense">Picture license:</label>
+                    <select asp-for="PictureLicense">
+                        <option value="">Select a license...</option>
+                        <option value="CC BY 4.0">CC BY 4.0</option>
+                        <option value="CC BY-SA 4.0">CC BY-SA 4.0</option>
+                        <option value="CC BY-ND 4.0">CC BY-ND 4.0</option>
+                        <option value="CC BY-NC 4.0">CC BY-NC 4.0</option>
+                        <option value="CC BY-NC-SA 4.0">CC BY-NC-SA 4.0</option>
+                        <option value="CC BY-NC-ND 4.0">CC BY-NC-ND 4.0</option>
+                    </select>
                 </p>
 
                 <button type="submit" asp-page-handler="CreateObservation">

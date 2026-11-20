@@ -299,6 +299,9 @@ namespace Bison.Razor.Migrations
                 {
                     b.HasBaseType("Bison.Core.Post");
 
+                    b.Property<string>("PictureLicense")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PicturePath")
                         .HasColumnType("TEXT");
 
