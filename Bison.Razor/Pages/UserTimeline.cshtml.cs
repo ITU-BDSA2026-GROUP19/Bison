@@ -27,6 +27,9 @@ public class UserTimelineModel : PageModel
     [BindProperty]
     public IFormFile? ImageFile { get; set; }
 
+    [BindProperty]
+    public string? PictureLicense { get; set; }
+
     public UserTimelineModel(IObservationService service)
     {
         _service = service;
@@ -72,7 +75,8 @@ public class UserTimelineModel : PageModel
             authorEmail,
             ObservationText,
             NewObservationTaxonId,
-            ImageFile
+            ImageFile,
+            PictureLicense
         );
 
         if (!success)
@@ -84,7 +88,7 @@ public class UserTimelineModel : PageModel
             return Page();
         }
 
-        return RedirectToPage(new { author });
+        return RedirectToPage("/UserTimeline", new { author });
     }
 
     public async Task<IActionResult> OnPostUploadPictureAsync(string author, int id, int page)
@@ -93,18 +97,21 @@ public class UserTimelineModel : PageModel
             return Challenge();
 
         if (ImageFile == null)
-            return RedirectToPage(new { author, page });
+            return RedirectToPage("/UserTimeline", new { author, page });
+
+        if (string.IsNullOrEmpty(PictureLicense))
+            return BadRequest("Picture license is required.");
 
         var authorEmail = User.FindFirstValue(ClaimTypes.Email);
 
         if (string.IsNullOrEmpty(authorEmail))
             return Forbid();
 
-        bool success = await _service.AddPictureToObservationAsync(id, authorEmail, ImageFile);
+        bool success = await _service.AddPictureToObservationAsync(id, authorEmail, ImageFile, PictureLicense);
 
         if (!success)
             return BadRequest("Could not upload picture.");
 
-        return RedirectToPage(new { author, page });
+        return RedirectToPage("/UserTimeline", new { author, page });
     }
 }

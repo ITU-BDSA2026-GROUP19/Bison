@@ -24,6 +24,9 @@ public class PublicModel : PageModel
     [BindProperty]
     public IFormFile? ImageFile { get; set; }
 
+    [BindProperty]
+    public string? PictureLicense { get; set; }
+
     public PublicModel(IObservationService service)
     {
         _service = service;
@@ -66,7 +69,8 @@ public class PublicModel : PageModel
             authorEmail,
             ObservationText,
             NewObservationTaxonId,
-            ImageFile
+            ImageFile,
+            PictureLicense
         );
 
         if (!success)
@@ -86,18 +90,21 @@ public class PublicModel : PageModel
             return Challenge();
 
         if (ImageFile == null)
-            return RedirectToPage(new { page, taxonId });
+            return RedirectToPage("/Public", new { page, taxonId });
+
+        if (string.IsNullOrEmpty(PictureLicense))
+            return BadRequest("Picture license is required.");
 
         var authorEmail = User.FindFirstValue(ClaimTypes.Email);
 
         if (string.IsNullOrEmpty(authorEmail))
             return Forbid();
 
-        bool success = await _service.AddPictureToObservationAsync(id, authorEmail, ImageFile);
+        bool success = await _service.AddPictureToObservationAsync(id, authorEmail, ImageFile, PictureLicense);
 
         if (!success)
             return BadRequest("Could not upload picture.");
 
-        return RedirectToPage(new { page, taxonId });
+        return RedirectToPage("/Public",new { page, taxonId });
     }
 }

@@ -13,6 +13,8 @@
     <img src="@Model.Observation.PicturePath"
          alt="Observation picture"
          style="max-width: 500px;" />
+
+    <p>License: @Model.Observation.PictureLicense</p>
 }
 
 @if (User.Identity?.IsAuthenticated == true)
@@ -21,6 +23,17 @@
         <input type="hidden" name="id" value="@Model.Observation.Id" />
 
         <input type="file" name="ImageFile" accept="image/*" />
+
+        <label for="PictureLicense">Picture License:</label>
+        <select asp-for="PictureLicense" required>
+            <option value="">Select a license...</option>
+            <option value="CC BY 4.0">CC BY 4.0</option>
+            <option value="CC BY-SA 4.0">CC BY-SA 4.0</option>
+            <option value="CC BY-NC 4.0">CC BY-NC 4.0</option>
+            <option value="CC BY-ND 4.0">CC BY-ND 4.0</option>
+            <option value="CC BY-NC-SA 4.0">CC BY-NC-SA 4.0</option>
+            <option value="CC BY-NC-ND 4.0">CC BY-NC-ND 4.0</option>
+        </select>
 
         <button type="submit" asp-page-handler="UploadPicture">
             Upload picture
