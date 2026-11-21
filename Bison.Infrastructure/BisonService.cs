@@ -20,6 +20,7 @@ public interface IObservationService
     public Task<bool> CreateProposal(string authorEmail, int observationId, int taxonId);
     public Task<bool> IsAuthor(string authorEmail, string authorName);
     public Task<bool> AddPictureToObservationAsync(int observationId, string authorEmail, IFormFile imageFile, string PictureLicense);
+    public Task ForgetAuthorAsync(string authorEmail, bool keepObservations);
 }
 
 public class ObservationService : IObservationService
@@ -281,5 +282,10 @@ public class ObservationService : IObservationService
         observation.PictureLicense = PictureLicense;
         await _postRepository.UpdatePostAsync(observation);
         return true;
+    }
+
+    public async Task ForgetAuthorAsync(string authorEmail, bool keepObservations)
+    {
+        await _postRepository.ForgetAuthorAsync(authorEmail, keepObservations);
     }
 }
