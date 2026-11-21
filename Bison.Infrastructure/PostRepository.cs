@@ -50,6 +50,19 @@ public class PostRepository : IPostRepository
             .ToListAsync();
     }
 
+    public async Task<List<Comment>> GetCommentsByAuthorEmailAsync(string authorEmail, int pageNumber, int pageSize)
+    {
+        return await _context.Posts
+            .OfType<Comment>()
+            .Where(c => c.Author.Email == authorEmail)
+            .OrderByDescending(c => c.TimeStamp)
+            .ThenByDescending(c => c.PostId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Include(c => c.Author)
+            .ToListAsync();
+    }
+
 
     public async Task<Observation?> GetObservationByIdAsync(int postId)
     {
@@ -66,6 +79,21 @@ public class PostRepository : IPostRepository
             .Where(c => c.Observation.PostId == observationId)
             .OrderBy(c => c.TimeStamp)
             .Include(c => c.Author)
+            .ToListAsync();
+    }
+
+
+    public async Task<List<Proposal>> GetProposalsByAuthorEmailAsync(string authorEmail, int pageNumber, int pageSize)
+    {
+        return await _context.Posts
+            .OfType<Proposal>()
+            .Where(c => c.Author.Email == authorEmail)
+            .OrderByDescending(c => c.TimeStamp)
+            .ThenByDescending(c => c.PostId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Include(c => c.Author)
+            .Include(c => c.Taxon)
             .ToListAsync();
     }
 
