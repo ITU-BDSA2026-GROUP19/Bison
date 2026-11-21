@@ -6,6 +6,9 @@ using Bison.Core;
 public class PostRepository : IPostRepository
 {
     private readonly BisonDBContext _context;
+    private const string DeletedUserName = "Deleted user";
+    private const string DeletedUserEmail = "deleted-user@bison.local";
+
 
     public PostRepository(BisonDBContext context)
     {
@@ -147,5 +150,65 @@ public class PostRepository : IPostRepository
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task ForgetAuthorAsync(string authorEmail, bool keepObservations)
+    {
+        var author = await _context.Authors
+            .FirstOrDefaultAsync(a => a.Email == authorEmail);
+
+        if (author == null)
+        {
+            return;
+        }
+
+        var observations = await _context.Posts
+            .OfType<Observation>()
+            .Where(o => o.Author.Email == authorEmail)
+            .ToListAsync();
+
+        var comments = await _context.Posts
+            .OfType<Comment>()
+            .Where(c => c.Author.Email == authorEmail)
+            .ToListAsync();
+
+        var proposals = await _context.Posts
+            .OfType<Proposal>()
+            .Where(p => p.Author.Email == authorEmail)
+            .ToListAsync();
+        
+
+        if (keepObservations)
+        {
+            var anonymousAuthor = await _context.Authors
+                .FirstOrDefaultAsync(a => a.Email == DeletedUserEmail);
+
+            if (anonymousAuthor == null)
+            {
+                anonymousAuthor = new Author
+                {
+                    Name = DeletedUserName,
+                    Email = DeletedUserEmail
+                };
+
+                _context.Authors.Add(anonymousAuthor);
+            }
+
+            _context.Posts.RemoveRange(comments);
+            _context.Posts.RemoveRange(proposals);
+            foreach (var observation in observations)
+            {
+                observation.Author = anonymousAuthor;
+            }
+        }
+        else
+        {
+            _context.Posts.RemoveRange(observations);
+            _context.Posts.RemoveRange(comments);
+            _context.Posts.RemoveRange(proposals);
+        }
+
+        _context.Authors.Remove(author);
+        await _context.SaveChangesAsync();
     }
 }
