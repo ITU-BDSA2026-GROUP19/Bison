@@ -3,6 +3,43 @@
 
 <div>
     <h2>About Me</h2>
+
+    <div style="text-align: right;">
+        <button type="button" onclick="document.getElementById('forgetMeForm').hidden = false"
+                style="background-color: red; color: white;">
+            Forget Me
+        </button>
+    </div>
+
+    <div id="forgetMeForm" hidden>
+        <form method="post" asp-page-handler="ForgetMe">
+            <p>Do you want to keep your observations online?</p>
+
+            <label>
+                <input type="radio" name="keepObservations" value="true" required />
+                Keep my observations (anonymized)
+            </label>
+
+            <br />
+
+            <label>
+                <input type="radio" name="keepObservations" value="false" required />
+                Delete my observations
+            </label>
+
+            <br /><br />
+
+            <button type="submit" style="background-color: red; color: white; border-radius: 5px;">
+                Confirm Forget Me
+            </button>
+
+            <button type="button" style="background-color: red; color: white; border-radius: 5px;"
+                    onclick="document.getElementById('forgetMeForm').hidden = true">
+                Cancel
+            </button>
+        </form>
+    </div>
+
     <h3>Personal Information</h3>
     <p><strong>Name:</strong> @User.Identity.Name</p>
     <p><strong>Email:</strong> @User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</p>
