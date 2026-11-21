@@ -10,7 +10,7 @@
     <h3>My Observations</h3>
 @if (Model.Observations.Any())
     {
-        <ul id="messagelist" class="observations">
+        <ul id="observationList" class="observations">
             @foreach (var ob in Model.Observations)
             {
                 <partial name="_Observation" model="ob" />
@@ -41,6 +41,26 @@
     {
         <em>You have made no Comments so far.</em>
     }
+
+    <h3>My Proposals</h3>
+
+    @if (Model.Proposals.Any())
+    {
+        <ul id="proposalList" class="proposals">
+            @foreach (var proposal in Model.Proposals)
+            {
+                <li>
+                    <strong>@proposal.Author</strong>
+                    <p>@proposal.TaxonName</p>
+                    <small>@proposal.Timestamp</small>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>You have made no Proposals so far.</em>
+    }
 </div>
 
 @if (Model.CurrentPage > 1)
@@ -50,7 +70,7 @@
 
 <span>Page @Model.CurrentPage</span>
 
-@if (Model.Observations.Count == 32 || Model.Comments.Count == 32)
+@if (Model.Observations.Count == 32 || Model.Comments.Count == 32 || Model.Proposals.Count == 32)
 {
     <a href="?page=@(Model.CurrentPage + 1)">Next</a>
 }
