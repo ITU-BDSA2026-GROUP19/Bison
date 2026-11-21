@@ -9,6 +9,7 @@ public interface IObservationService
     public Task<List<ObservationViewModel>> GetObservationsFromAuthor(string author, int page);
 
     public Task<List<ObservationDetailsViewModel>> GetObservationById(int id);
+    public Task<List<ObservationViewModel>> GetCommentsFromAuthor(string authorEmail, int page);
     public Task<List<ObservationViewModel>> GetComments(int observationId);
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
@@ -81,6 +82,20 @@ public class ObservationService : IObservationService
                 observation.PictureLicense
             )
         };
+    }
+
+    public async Task<List<ObservationViewModel>> GetCommentsFromAuthor(string authorEmail, int page)
+    {
+        List<Comment> comments = await _postRepository.GetCommentsByAuthorEmailAsync(authorEmail, page, PageSize);
+        return comments.Select(c => new ObservationViewModel(
+            c.PostId,
+            c.Author.Name,
+            c.Author.Email,
+            c.Text,
+            c.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
+            null,
+            null
+        )).ToList();
     }
 
     public async Task<List<ObservationViewModel>> GetComments(int observationId)

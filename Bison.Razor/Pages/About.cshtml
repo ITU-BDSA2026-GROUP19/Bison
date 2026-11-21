@@ -2,6 +2,12 @@
 @model Bison.Razor.Pages.AboutModel
 
 <div>
+    <h2>About Me</h2>
+    <h3>Personal Information</h3>
+    <p><strong>Name:</strong> @User.Identity.Name</p>
+    <p><strong>Email:</strong> @User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</p>
+
+    <h3>My Observations</h3>
 @if (Model.Observations.Any())
     {
         <ul id="messagelist" class="observations">
@@ -13,7 +19,27 @@
     }
     else
     {
-        <em>There are no Observations so far.</em>
+        <em>You have made no Observations so far.</em>
+    }
+
+    <h3>My Comments</h3>
+
+    @if (Model.Comments.Any())
+    {
+        <ul id="commentList" class="comments">
+            @foreach (var comment in Model.Comments)
+            {
+                <li>
+                    <strong>@comment.Author</strong>
+                    <p>@comment.Message</p>
+                    <small>@comment.Timestamp</small>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>You have made no Comments so far.</em>
     }
 </div>
 
@@ -24,7 +50,7 @@
 
 <span>Page @Model.CurrentPage</span>
 
-@if (Model.Observations.Count == 32)
+@if (Model.Observations.Count == 32 || Model.Comments.Count == 32)
 {
     <a href="?page=@(Model.CurrentPage + 1)">Next</a>
 }

@@ -12,6 +12,7 @@ public class AboutModel : PageModel
 {
     private readonly IObservationService _service;
     public List<ObservationViewModel> Observations { get; set; } = new();
+    public List<ObservationViewModel> Comments { get; set; } = new();
     public int CurrentPage {get; set; }
     
 
@@ -35,6 +36,7 @@ public class AboutModel : PageModel
         if (!string.IsNullOrEmpty(authorEmail) && !string.IsNullOrEmpty(author))
         {
             Observations = await _service.GetObservationsFromAuthor(author, page);
+            Comments = await _service.GetCommentsFromAuthor(authorEmail, page);
         }
         else
         {

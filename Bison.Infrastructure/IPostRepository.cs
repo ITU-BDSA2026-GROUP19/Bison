@@ -11,6 +11,7 @@ public interface IPostRepository
     Task UpdatePostAsync(Post post);
     Task DeletePostAsync(int postId);
     Task<List<Observation>> GetPostsByAuthorAsync(string authorName, int pageNumber, int pageSize);
+    Task<List<Comment>> GetCommentsByAuthorEmailAsync(string authorEmail, int pageNumber, int pageSize);
     Task<List<Comment>> GetCommentsByObservationIdAsync(int observationId);
     Task<List<Proposal>> GetProposalsByObservationIdAsync(int observationId);
     Task<List<Taxon>> GetTaxaAsync();
