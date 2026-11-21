@@ -13,6 +13,7 @@ public interface IPostRepository
     Task<List<Observation>> GetPostsByAuthorAsync(string authorName, int pageNumber, int pageSize);
     Task<List<Comment>> GetCommentsByAuthorEmailAsync(string authorEmail, int pageNumber, int pageSize);
     Task<List<Comment>> GetCommentsByObservationIdAsync(int observationId);
+    Task<List<Proposal>> GetProposalsByAuthorEmailAsync(string authorEmail, int pageNumber, int pageSize);
     Task<List<Proposal>> GetProposalsByObservationIdAsync(int observationId);
     Task<List<Taxon>> GetTaxaAsync();
     Task<Taxon?> GetTaxonByIdAsync(int taxonId);
