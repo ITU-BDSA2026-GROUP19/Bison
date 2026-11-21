@@ -11,6 +11,7 @@ public interface IObservationService
     public Task<List<ObservationDetailsViewModel>> GetObservationById(int id);
     public Task<List<ObservationViewModel>> GetCommentsFromAuthor(string authorEmail, int page);
     public Task<List<ObservationViewModel>> GetComments(int observationId);
+    public Task<List<ProposalViewModel>> GetProposalsFromAuthor(string authorEmail, int page);
     public Task<List<ProposalViewModel>> GetProposals(int observationId);
     public Task<List<ObservationViewModel>> GetObservationsByTaxon(int taxonId, int page);
     public Task<List<Taxon>> GetTaxons();
@@ -109,6 +110,18 @@ public class ObservationService : IObservationService
             c.TimeStamp.ToString("MM/dd/yy H:mm:ss"),
             null,
             null
+        )).ToList();
+    }
+
+
+    public async Task<List<ProposalViewModel>> GetProposalsFromAuthor(string authorEmail, int page)
+    {
+        List<Proposal> proposals = await _postRepository.GetProposalsByAuthorEmailAsync(authorEmail, page, PageSize);
+        return proposals.Select(p => new ProposalViewModel(
+            p.Author.Name,
+            p.Taxon.TaxonId,
+            p.Taxon.VernacularName ?? p.Taxon.dwc_TaxonID,
+            p.TimeStamp.ToString("MM/dd/yy H:mm:ss")
         )).ToList();
     }
 
