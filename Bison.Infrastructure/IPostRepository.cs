@@ -18,4 +18,5 @@ public interface IPostRepository
     Task<List<Taxon>> GetTaxaAsync();
     Task<Taxon?> GetTaxonByIdAsync(int taxonId);
     Task<Author?> GetAuthorByEmailAsync(string email);
+    Task ForgetAuthorAsync(string authorEmail, bool keepObservations);
 }
