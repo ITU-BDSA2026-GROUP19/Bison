@@ -16,4 +16,5 @@ public class BisonDBContext : IdentityDbContext
     public DbSet<Observation> Observations { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Taxon> Taxa { get; set; }
+    public DbSet<Achievement> Achievements { get; set; }
 }
