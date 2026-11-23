@@ -38,12 +38,14 @@ if (string.IsNullOrEmpty(dbPath))
 }
 
 builder.Services.AddScoped<IObservationService, ObservationService>();
+builder.Services.AddScoped<IAchievementService, AchievementService>();
 
 string connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITaxonFilterService, TaxonFilterService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 
 
 var app = builder.Build();
@@ -57,6 +59,7 @@ using (var scope = app.Services.CreateAsyncScope())
 
     Console.WriteLine($"DATABASE PATH: {dbContext.Database.GetDbConnection().DataSource}");
     DbInitializer.SeedDatabase(dbContext);
+    AchievementInitializer.SeedDatabase(dbContext);
 }
 
 // Configure the HTTP request pipeline.

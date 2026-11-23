@@ -17,6 +17,40 @@ namespace Bison.Razor.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("AchievementAuthor", b =>
+                {
+                    b.Property<int>("AchievementsAchievementId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AuthorsAuthorId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("AchievementsAchievementId", "AuthorsAuthorId");
+
+                    b.HasIndex("AuthorsAuthorId");
+
+                    b.ToTable("AchievementAuthor");
+                });
+
+            modelBuilder.Entity("Bison.Core.Achievement", b =>
+                {
+                    b.Property<int>("AchievementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AchievementId");
+
+                    b.ToTable("Achievements");
+                });
+
             modelBuilder.Entity("Bison.Core.Author", b =>
                 {
                     b.Property<int>("AuthorId")
@@ -337,6 +371,21 @@ namespace Bison.Razor.Migrations
                         });
 
                     b.HasDiscriminator().HasValue("Proposal");
+                });
+
+            modelBuilder.Entity("AchievementAuthor", b =>
+                {
+                    b.HasOne("Bison.Core.Achievement", null)
+                        .WithMany()
+                        .HasForeignKey("AchievementsAchievementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bison.Core.Author", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsAuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Bison.Core.Post", b =>

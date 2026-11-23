@@ -302,3 +302,93 @@ div.page div.observationbox textarea {
     border-radius: 2px;
     color: #571010;
 }
+
+.achievements-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.achievement {
+    background-color: #e7f0e6;
+    border: 1px solid #b5cbb3;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+
+    height: 320px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.achievement:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(180, 35, 35, 0.45);
+}
+
+.achievement img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.achievement h3 {
+    color: #24452d;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 12px 0 8px;
+}
+
+.achievement p {
+    color: #49634c;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.locked-achievement {
+    filter: grayscale(80%);
+    opacity: 0.7;
+}
+
+.achievement h3 {
+    color: #24452d;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.achievement p {
+    color: #49634c;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.achievement h5 {
+    color: #287a3d;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.earned-text {
+    color: #287a3d;
+}
+
+.locked-text {
+    color: #858585;
+}
+
+.achievement img.completionist-image {
+    height: 110px;
+    object-fit: contain;
+}

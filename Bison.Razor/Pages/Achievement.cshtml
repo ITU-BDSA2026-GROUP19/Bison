@@ -1,0 +1,25 @@
+@page "/Achievement"
+@model Bison.Razor.Pages.AchievementsModel
+
+<h1>Achievements</h1>
+
+<div class="achievements-container">
+    @foreach (var achievement in Model.Achievements)
+    {
+        <div class="achievement">
+            <img src="/images/Achievements/@(achievement.Name).jpeg" alt="@achievement.Name" 
+                class="@(achievement.IsEarned ? "" : "locked-achievement") @(achievement.Name == "Completionist" ? "completionist-image" : "")" />
+
+            @if (achievement.IsEarned) {
+                <h5 style="color: green;">Earned</h5>
+            }
+            else
+            {
+                 <h5 class="locked-text">Locked</h5>
+            }
+            <h3>@achievement.Name</h3>
+
+            <p>@achievement.Description</p>
+        </div>
+    }
+</div>
