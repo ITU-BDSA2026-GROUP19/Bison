@@ -38,6 +38,7 @@ if (string.IsNullOrEmpty(dbPath))
 }
 
 builder.Services.AddScoped<IObservationService, ObservationService>();
+builder.Services.AddScoped<IAchievementService, AchievementService>();
 
 string connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));

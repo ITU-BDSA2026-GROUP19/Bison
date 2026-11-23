@@ -12,6 +12,12 @@ public class AchievementRepository : IAchievementRepository
         _context = context;
     }
 
+    public async Task<Achievement?> GetAchievementByNameAsync(string name)
+    {
+        return await _context.Achievements
+            .FirstOrDefaultAsync(a => a.Name == name);
+    }
+
     public async Task<List<Achievement>> GetAchievementsByAuthorAsync(Author author)
     {
         return await _context.Achievements

@@ -29,12 +29,15 @@ public class ObservationService : IObservationService
     private readonly IPostRepository _postRepository;
     private readonly ITaxonFilterService _taxonFilterService;
     private readonly IImageService _imageService;
+    private readonly IAchievementService _achievementService;
 
-    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService, IImageService imageService)
+    public ObservationService(IPostRepository db, ITaxonFilterService taxonFilterService,
+        IImageService imageService, IAchievementService achievementService)
     {
         _postRepository = db;
         _taxonFilterService = taxonFilterService;
         _imageService = imageService;
+        _achievementService = achievementService;
     }
 
     public async Task<List<ObservationViewModel>> GetObservations(int page)
