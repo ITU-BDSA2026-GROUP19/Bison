@@ -73,8 +73,13 @@ div.page div.navigation {
 }
 
 div.page div.navigation a {
-  color: #444;
-  font-weight: bold;
+    color: #571010;
+    background-color:#e7bcbc;
+    font-weight: bold;
+    text-decoration: none;
+    border: 1px solid #cc6e6e;
+    padding: 5px 10px;
+    border-radius: 4px;
 }
 
 div.page div.navigation form {
@@ -82,16 +87,19 @@ div.page div.navigation form {
 }
 
 div.page div.navigation form button {
-    padding: unset;
-    background: unset;
-    color: #444;
+    color: #571010;
+    background-color: #e7bcbc;
     font-weight: bold;
-    display: inline-block;
-    font-size: unset;
+    border: 1px solid #571010;
+    padding: 5px 10px;
+    border-radius: 4px;
     cursor: pointer;
-    text-decoration: underline;
-    font-family: unset;
-    letter-spacing: unset;
+}
+
+div.page div.navigation a:hover,
+div.page div.navigation form button:hover {
+    background-color: #cc6e6e;
+    border-color: #571010;
 }
 
 div.page h2 {
