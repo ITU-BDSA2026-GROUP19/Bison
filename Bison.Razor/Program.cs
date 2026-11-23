@@ -57,6 +57,7 @@ using (var scope = app.Services.CreateAsyncScope())
 
     Console.WriteLine($"DATABASE PATH: {dbContext.Database.GetDbConnection().DataSource}");
     DbInitializer.SeedDatabase(dbContext);
+    AchievementInitializer.SeedDatabase(dbContext);
 }
 
 // Configure the HTTP request pipeline.
