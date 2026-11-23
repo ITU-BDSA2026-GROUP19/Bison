@@ -12,14 +12,19 @@ public class AchievementService : IAchievementService
 
     public async Task AwardAchievementsAsync(Author author, List<string> achievementNames)
     {
+
+        var earnedAchievements =
+            await _achievementRepo.GetAchievementsByAuthorAsync(author);
+        
         foreach (String name in achievementNames)
         {
-            if (!author.Achievements.Any(a => a.Name == name))
+            if (!earnedAchievements.Any(a => a.Name == name))
             {
                 Achievement? achievement = await _achievementRepo.GetAchievementByNameAsync(name);
                 if (achievement != null)
                 {
                     await _achievementRepo.GrantAchievementAsync(achievement ,author);
+                    earnedAchievements.Add(achievement);
                 }
             }
         }
@@ -35,14 +40,15 @@ public class AchievementService : IAchievementService
         };
 
         bool hasAllAchievements = requiredAchievements.All(name =>
-            author.Achievements.Any(a => a.Name == name));
+            earnedAchievements.Any(a => a.Name == name));
 
-        if (hasAllAchievements && !author.Achievements.Any(a => a.Name == "Completionist"))
+        if (hasAllAchievements && !earnedAchievements.Any(a => a.Name == "Completionist"))
         {
             Achievement? achievement = await _achievementRepo.GetAchievementByNameAsync("Completionist");
             if (achievement != null)
             {
                 await _achievementRepo.GrantAchievementAsync(achievement, author);
+                earnedAchievements.Add(achievement);
             }
         }
     }

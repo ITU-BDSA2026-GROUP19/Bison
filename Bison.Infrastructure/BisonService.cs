@@ -208,6 +208,15 @@ public class ObservationService : IObservationService
 
         await _postRepository.AddPostAsync(observation);
 
+        var achievementNames = new List<string> { "Blogger" };
+
+        if (imageFile != null && imageFile.Length > 0)
+        {
+            achievementNames.Add("Photographer");
+        }
+
+        await _achievementService.AwardAchievementsAsync(author, achievementNames);
+
         return true;
     }
 
@@ -236,6 +245,15 @@ public class ObservationService : IObservationService
 
         await _postRepository.AddPostAsync(comment);
 
+        var achievementNames = new List<string> { "Commentator" };
+
+        if (author.Email != observation.Author.Email)
+        {
+            achievementNames.Add("Conversationalist");
+        }
+
+        await _achievementService.AwardAchievementsAsync(author, achievementNames);
+
         return true;
     }
 
@@ -261,6 +279,15 @@ public class ObservationService : IObservationService
 
         await _postRepository.AddPostAsync(proposal);
 
+        var achievementNames = new List<string> { "Proposer" };
+
+        if (author.Email != observation.Author.Email)
+        {
+            achievementNames.Add("TaxonomyHelper");
+        }
+
+        await _achievementService.AwardAchievementsAsync(author, achievementNames);
+
         return true;
     }
 
@@ -284,6 +311,9 @@ public class ObservationService : IObservationService
         observation.PicturePath = await _imageService.SaveImageAsync(imageFile);
         observation.PictureLicense = PictureLicense;
         await _postRepository.UpdatePostAsync(observation);
+
+        await _achievementService.AwardAchievementsAsync(observation.Author, new List<string> {"Photographer"});
+
         return true;
     }
 
