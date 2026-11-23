@@ -25,6 +25,13 @@ public class AchievementRepository : IAchievementRepository
             .ToListAsync();
     }
 
+    public async Task<List<Achievement>> GetAllAchievementsAsync()
+    {
+        return await _context.Achievements
+            .ToListAsync();
+    }
+
+
     public async Task GrantAchievementAsync(Achievement achievement, Author author)
     {
         achievement.Authors.Add(author);

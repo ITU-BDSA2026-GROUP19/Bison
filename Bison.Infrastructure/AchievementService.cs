@@ -5,9 +5,11 @@ namespace Bison.Infrastructure;
 public class AchievementService : IAchievementService
 {
     private readonly IAchievementRepository _achievementRepo;
-    public AchievementService(IAchievementRepository achievementRepository)
+    private readonly IPostRepository _postRepository;
+    public AchievementService(IAchievementRepository achievementRepository, IPostRepository postRepository)
     {
         _achievementRepo = achievementRepository;
+        _postRepository = postRepository;
     }
 
     public async Task AwardAchievementsAsync(Author author, List<string> achievementNames)
@@ -51,5 +53,24 @@ public class AchievementService : IAchievementService
                 earnedAchievements.Add(achievement);
             }
         }
+    }
+
+    public async Task<List<AchievementViewModel>> GetAchievementsForAuthorAsync(string authorEmail)
+    {
+        var achievements = await _achievementRepo.GetAllAchievementsAsync();
+        var author = await _postRepository.GetAuthorByEmailAsync(authorEmail);
+        if (author == null)
+        {
+            return new List<AchievementViewModel>();
+        }
+
+        var earnedAchievements = await _achievementRepo.GetAchievementsByAuthorAsync(author);
+        var models = new List<AchievementViewModel> {};
+
+        foreach (Achievement ach in achievements) {
+            models.Add(new AchievementViewModel(ach.Name, ach.Description, earnedAchievements.Any(a => a.AchievementId == ach.AchievementId)));
+        }
+
+         return models;
     }
 }

@@ -1,0 +1,17 @@
+@page "/Achievement"
+@model Bison.Razor.Pages.AchievementsModel
+
+<h1>Achievements</h1>
+
+<div class="achievements-container">
+    @foreach (var achievement in Model.Achievements)
+    {
+        <div class="achievement">
+            <img src="" alt="@achievement.Name" />
+
+            <h3>@achievement.Name</h3>
+
+            <p>@achievement.Description</p>
+        </div>
+    }
+</div>
