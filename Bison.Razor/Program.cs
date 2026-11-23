@@ -44,6 +44,7 @@ builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(conne
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITaxonFilterService, TaxonFilterService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 
 
 var app = builder.Build();
